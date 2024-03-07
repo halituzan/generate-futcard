@@ -1,12 +1,9 @@
 import axios from "axios";
 import React, { useState } from "react";
 
-const { imglyRemoveBackground } = require("@imgly/background-removal");
-
 const RemoveBackground: React.FC = () => {
   const [img, setImg] = useState<any>(null);
   const [responseImage, setResponseImage] = useState("");
-  console.log(responseImage);
 
   const toBase64 = (file: any) =>
     new Promise((resolve, reject) => {
@@ -21,44 +18,38 @@ const RemoveBackground: React.FC = () => {
       console.error("No file selected");
       return;
     }
-    const image = await toBase64(img);
-    console.log(image);
-
-    console.log(URL.createObjectURL(img));
+    // const image = await toBase64(img);
     const url = img.name;
-    console.log(url);
 
     const formData = new FormData();
-    formData.append("file", img);
+    formData.append("image", img);
 
     try {
-      const { data } = await axios.post("/api/remove", { file: url });
+      await axios.post("api/uploads", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      const { data } = await axios.post("/api/remove", { url });
       setResponseImage(data.data);
     } catch (error) {
       console.error("Error:", error);
     }
   };
 
-  //   const removeBg = async () => {
-  //     // var reader = new FileReader();
-  //     // reader.readAsText(img);
-  //     // console.log(reader);
-
-  //     imglyRemoveBackground(img).then((blob: Blob) => {
-  //       const url = URL.createObjectURL(blob);
-
-  //       return url;
-  //     });
-  //   };
-
   return (
-    <div>
+    <div style={{ width: "100vw", backgroundColor: "gray", height: "100vh" }}>
       <input
         type='file'
         onChange={(e) => setImg(e.target.files ? e.target.files[0] : null)}
       />
       <button onClick={removeBg}>Kaydet</button>
-      {responseImage && <img src={responseImage} alt='' />}
+      <div style={{ width: "500px" }}>
+        {responseImage && (
+          <img src={responseImage} alt='' style={{ width: "100%" }} />
+        )}
+      </div>
     </div>
   );
 };
