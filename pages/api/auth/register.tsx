@@ -1,12 +1,14 @@
 import User from "@/helpers/dbModels/userModel";
 import connectDB from "@/helpers/dbConnect";
-import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import cookie from "cookie";
+const bcrypt = require("bcryptjs");
 
 connectDB();
 
 const handler = async (req: any, res: any) => {
   const { firstName, lastName, email, password, userName } = req.body;
-  console.log(req.body);
+  const jwtSecret: any = process.env.NEXT_PUBLIC_JWT_SECRET;
 
   if (!firstName || !lastName || !email || !password || !userName) {
     res.json({
@@ -28,9 +30,9 @@ const handler = async (req: any, res: any) => {
         status: false,
       });
 
-    if (user?.phone === phone)
+    if (user?.userName === userName)
       res.json({
-        message: "Bu Telefon Numarası İle Kullanıcı Mevcut",
+        message: "Bu kullanıcı adı ile kullanıcı mevcut",
         status: false,
       });
 
@@ -44,9 +46,26 @@ const handler = async (req: any, res: any) => {
       lastName,
       email,
       password: hashedPassword,
-      phone,
+      userName,
     });
     await newUser.save();
+
+    // Create and sign JWT token
+    const token = jwt.sign({ userId: newUser._id }, jwtSecret, {
+      expiresIn: "1d", // Set your desired expiration time
+    });
+
+    // Set the token in a cookie
+    res.setHeader(
+      "Set-Cookie",
+      cookie.serialize("token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        maxAge: 86400 * 7, // 1 day in seconds
+        path: "/", // Set the cookie path as needed
+      })
+    );
 
     res
       .status(201)

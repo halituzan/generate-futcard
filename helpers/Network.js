@@ -7,24 +7,23 @@ const Network = class NETWORK {
       baseURL: '/',
     })
 
-    this.network.interceptors.request.use(async config => {
-      const token = localStorage.getItem('token')
-      if (token) {
-        config.headers.token = token
-        config.headers.platform = 'web'
-      }
+    // this.network.interceptors.request.use(async config => {
+    //   const token = localStorage.getItem('token')
+    //   if (token) {
+    //     config.headers.token = token
+    //     config.headers.platform = 'web'
+    //   }
 
-      return config
-    })
+    //   return config
+    // })
 
     this.network.interceptors.response.use(null, error => {
       if (error.response.status === 401) {
-        localStorage.removeItem('token')
         location.href = '/login'
       }
       if (error.response.status === 400) {
-        console.log(error)
-        toast.error(error.response.data.text)
+        console.log(error.response.data.message)
+        toast.error(error.response.data.message)
       }
       if (error.response.status === 406) {
         const lang = localStorage.getItem('i18nextLng')

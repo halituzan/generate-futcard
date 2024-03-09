@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
-import "../../app/globals.css";
+import "../../Assets/css/globals.css";
+import Main from "@/pages";
 const DrawingBoard: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [defaultImgSrc, setDefaultImgSrc] = useState<string | null>(
@@ -155,35 +156,40 @@ const DrawingBoard: React.FC = () => {
   ]);
 
   return (
-    <div className="flex flex-col h-screen">
-      <div className="m-4">
-        <label className="bg-red-600 rounded-md p-2" htmlFor="add-image">
-          Add Image
-        </label>
-        <input
-          id="add-image"
-          style={{ display: "none" }}
-          type="file"
-          onChange={handleFileChange}
-        />
-      </div>
+    <Main>
+      <div className='flex flex-col h-screen'>
+        <div className='m-4'>
+          <label className='bg-red-600 rounded-md p-2' htmlFor='add-image'>
+            Add Image
+          </label>
+          <input
+            id='add-image'
+            style={{ display: "none" }}
+            type='file'
+            onChange={handleFileChange}
+          />
+        </div>
 
-      <canvas
-        style={{ border: "1px solid red" }}
-        className="flex-1 h-96  min-w-48 max-w-[600px]"
-        ref={canvasRef}
-        width={400}
-        height={750}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-      />
-      <div className="mt-10">
-        <button className="bg-red-600 rounded-md p-2" onClick={handleSaveImage}>
-          Save Image
-        </button>
+        <canvas
+          style={{ border: "1px solid red" }}
+          className='flex-1 h-96  min-w-48 max-w-[600px]'
+          ref={canvasRef}
+          width={400}
+          height={750}
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+        />
+        <div className='mt-10'>
+          <button
+            className='bg-red-600 rounded-md p-2'
+            onClick={handleSaveImage}
+          >
+            Save Image
+          </button>
+        </div>
       </div>
-    </div>
+    </Main>
   );
 };
 

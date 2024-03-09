@@ -4,6 +4,7 @@ import store from "@/lib/store";
 import type { AppProps } from "next/app";
 import { Provider } from "react-redux";
 import "@/Assets/css/globals.css";
+import { Toaster } from "react-hot-toast";
 export default function App({ Component, pageProps }: AppProps) {
   const isAuthPage = Component.displayName === "auth";
 
@@ -12,6 +13,7 @@ export default function App({ Component, pageProps }: AppProps) {
       <Provider store={store}>
         <AuthLayout>
           <Component {...pageProps} />
+          <Toaster />
         </AuthLayout>
       </Provider>
     );
@@ -20,6 +22,7 @@ export default function App({ Component, pageProps }: AppProps) {
       <Provider store={store}>
         <Layout>
           <Component {...pageProps} />
+          <Toaster />
         </Layout>
       </Provider>
     );

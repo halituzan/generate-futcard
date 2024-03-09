@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import TextInput from "../Patterns/TextInput";
 import Button from "../Patterns/Buttons";
 import { Icon } from "@iconify/react";
+import Network from "@/helpers/Network";
+
 type Props = {};
 
 const Register = (props: Props) => {
@@ -12,6 +14,21 @@ const Register = (props: Props) => {
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
 
+  const registerHandler = async () => {
+    const body = {
+      userName,
+      firstName,
+      lastName,
+      email,
+      password,
+    };
+    try {
+      await Network.postData("/api/auth/register", body);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className='flex items-center justify-between w-screen h-screen'>
       <div className='w-1/2 h-screen flex-1'></div>
@@ -19,7 +36,7 @@ const Register = (props: Props) => {
         <div className='px-10 self-start'>
           <h2 className='mb-5 text-4xl font-bold flex items-center '>
             Generate Futcard
-            <Icon icon='maki:soccer' className="text-blue-700" />
+            <Icon icon='maki:soccer' className='text-blue-700' />
           </h2>
           <p className='text-lg mb-10 font-500 text-blue-700'>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium
@@ -80,6 +97,7 @@ const Register = (props: Props) => {
         />
         <div className='px-10 w-full'>
           <Button
+            onClick={registerHandler}
             text='Sign Up'
             textColor='text-white'
             color='bg-blue-600'
@@ -95,7 +113,10 @@ const Register = (props: Props) => {
         </div>
         <div className='px-10 mt-4 w-full flex justify-between items-center'>
           <p className='font-500'>Do you have an account?</p>
-          <a href='/login' className='text-blue-500 font-700 hover:text-blue-800'>
+          <a
+            href='/login'
+            className='text-blue-500 font-700 hover:text-blue-800'
+          >
             Sign In
           </a>
         </div>

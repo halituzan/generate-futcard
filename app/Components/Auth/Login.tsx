@@ -2,13 +2,28 @@ import React, { useState } from "react";
 import TextInput from "../Patterns/TextInput";
 import Button from "../Patterns/Buttons";
 import { Icon } from "@iconify/react";
+import Network from "@/helpers/Network";
+import { useRouter } from "next/router";
 
 type Props = {};
 
 const Login = (props: Props) => {
+  const router = useRouter();
   const [userName, setUserName] = useState("");
-
   const [password, setPassword] = useState("");
+
+  const loginHandler = async () => {
+    const body = {
+      userName,
+      password,
+    };
+    try {
+      await Network.postData("/api/auth/login", body);
+      router.push("/");
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className='flex items-center justify-between w-screen h-screen'>
@@ -45,6 +60,7 @@ const Login = (props: Props) => {
 
         <div className='px-10 w-full'>
           <Button
+            onClick={loginHandler}
             text='Login'
             textColor='text-white'
             color='bg-blue-600'
@@ -54,7 +70,10 @@ const Login = (props: Props) => {
         </div>
         <div className='px-10 mt-4 w-full flex justify-between items-center'>
           <p className='font-500'>Don't have an account?</p>
-          <a href='/register' className='text-blue-500 font-700 hover:text-blue-800'>
+          <a
+            href='/register'
+            className='text-blue-500 font-700 hover:text-blue-800'
+          >
             Sign Up
           </a>
         </div>
