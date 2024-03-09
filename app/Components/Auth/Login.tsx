@@ -4,6 +4,7 @@ import Button from "../Patterns/Buttons";
 import { Icon } from "@iconify/react";
 import Network from "@/helpers/Network";
 import { useRouter } from "next/router";
+import toast from "react-hot-toast";
 
 type Props = {};
 
@@ -20,6 +21,10 @@ const Login = (props: Props) => {
     try {
       await Network.postData("/api/auth/login", body);
       router.push("/");
+      toast.success("Giriş Başarılı");
+      setTimeout(() => {
+        router.push("/");
+      }, 1000);
     } catch (error) {
       console.log(error);
     }

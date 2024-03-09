@@ -2,6 +2,7 @@ import User from "@/helpers/dbModels/userModel";
 import connectDB from "@/helpers/dbConnect";
 import jwt from "jsonwebtoken";
 import cookie from "cookie";
+import Galleries from "@/helpers/dbModels/galleryModel";
 const bcrypt = require("bcryptjs");
 
 connectDB();

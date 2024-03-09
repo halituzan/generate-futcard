@@ -3,10 +3,13 @@ import TextInput from "../Patterns/TextInput";
 import Button from "../Patterns/Buttons";
 import { Icon } from "@iconify/react";
 import Network from "@/helpers/Network";
+import toast from "react-hot-toast";
+import { useRouter } from "next/router";
 
 type Props = {};
 
 const Register = (props: Props) => {
+  const router = useRouter();
   const [userName, setUserName] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -23,7 +26,9 @@ const Register = (props: Props) => {
       password,
     };
     try {
-      await Network.postData("/api/auth/register", body);
+      const res = await Network.postData("/api/auth/register", body);
+      toast.success(res.message);
+      router.push("/login");
     } catch (error) {
       console.log(error);
     }

@@ -11,6 +11,7 @@ export interface ButtonProps {
   disabled?: boolean;
   className?: string;
   textColor?: string;
+  iconSize?: number;
   mr?: string;
   onClick?: () => void;
 }
@@ -26,13 +27,14 @@ const Button: React.FC<ButtonProps> = ({
   className,
   mr,
   textColor = "text-white",
+  iconSize = 24,
   onClick,
 }) => {
   return (
     <div className={`flex flex-col w-full ${mr && "mr-" + mr}`}>
       <button
         className={`
-        ${iconLeft || iconRight ? "justify-between" : "justify-center"}
+        ${iconLeft || iconRight ? "justify-center" : "justify-center"}
         ${height}
         ${width}
         ${textColor}
@@ -40,12 +42,18 @@ const Button: React.FC<ButtonProps> = ({
         ${className && className}
         text-[14px] flex items-center rounded-lg
         font-700
+        justify-center
         `}
         disabled={disabled}
         onClick={onClick}
       >
-        {iconLeft && <Icon icon={iconLeft} />} {text}
-        {iconRight && <Icon icon={iconRight} />}
+        {iconLeft && (
+          <Icon fontSize={iconSize} icon={iconLeft} className='mr-2' />
+        )}
+        {text}
+        {iconRight && (
+          <Icon fontSize={iconSize} icon={iconRight} className='ml-2' />
+        )}
       </button>
     </div>
   );
@@ -62,6 +70,8 @@ export declare interface InputProps {
   disabled?: boolean;
   className?: string;
   textColor?: string;
+  iconSize?: number;
+
   mr?: string;
   onClick?: () => void;
 }
