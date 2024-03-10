@@ -72,6 +72,7 @@ const DrawingBoard: React.FC = () => {
     event: React.MouseEvent<HTMLCanvasElement, MouseEvent>
   ) => {
     const canvas = canvasRef.current;
+    if (!canvas) return;
     const ctx = canvas.getContext("2d");
     if (dragging) {
       const rect = canvasRef.current?.getBoundingClientRect();
@@ -93,6 +94,7 @@ const DrawingBoard: React.FC = () => {
           // Update the state with the new dimensions
           setWidth(newWidth);
           setHeight(newHeight);
+          if (!ctx) return;
           ctx.strokeStyle = "#f00"; // some color/style
           ctx.lineWidth = 2;
           ctx.strokeRect(offsetX, offsetY, width, height);
@@ -173,59 +175,71 @@ const DrawingBoard: React.FC = () => {
                 textBaseline: "top",
               }
             );
+            //* PAC
             writeText(
-              { text: pac + " PAC", x: 203, y: 410 },
+              { text: pac, x: 160, y: 410 },
               {
                 fontSize: 40,
                 color: "#fbffb2",
-                textAlign: "center",
+                textAlign: "left",
                 textBaseline: "left",
-              }
+              },
+              "PAC"
             );
+            //* SHO
             writeText(
-              { text: sho + " SHO", x: 203, y: 445 },
+              { text: sho, x: 160, y: 445 },
               {
                 fontSize: 40,
                 color: "#fbffb2",
-                textAlign: "center",
+                textAlign: "left",
                 textBaseline: "left",
-              }
+              },
+              "SHO"
             );
+            //* PAS
             writeText(
-              { text: pas + " PAS", x: 203, y: 480 },
+              { text: pas, x: 160, y: 480 },
               {
                 fontSize: 40,
                 color: "#fbffb2",
-                textAlign: "center",
+                textAlign: "left",
                 textBaseline: "left",
-              }
+              },
+              "PAS"
             );
+            //* DRI
             writeText(
-              { text: dri + " DRI", x: 400, y: 410 },
+              { text: dri, x: 350, y: 410 },
               {
                 fontSize: 40,
                 color: "#fbffb2",
-                textAlign: "center",
+                textAlign: "left",
                 textBaseline: "left",
-              }
+              },
+              "DRI"
             );
+            //* DEF
             writeText(
-              { text: def + " DEF", x: 400, y: 445 },
+              { text: def, x: 350, y: 445 },
               {
                 fontSize: 40,
                 color: "#fbffb2",
-                textAlign: "center",
+                textAlign: "left",
                 textBaseline: "left",
-              }
+              },
+              "DEF"
             );
+            //* PHY
             writeText(
-              { text: phy + " PHY", x: 400, y: 480 },
+              { text: phy, x: 350, y: 480 },
               {
                 fontSize: 40,
                 color: "#fbffb2",
-                textAlign: "center",
+                textAlign: "left",
                 textBaseline: "left",
-              }
+              },
+              "PHY"
             );
           }
           if (flag) {
@@ -241,6 +255,7 @@ const DrawingBoard: React.FC = () => {
     }
   }, [
     defaultImgSrc,
+    result,
     imgSrc,
     offsetX,
     offsetY,
@@ -250,7 +265,7 @@ const DrawingBoard: React.FC = () => {
     resizing,
   ]);
 
-  const writeText = (info: any, style: any = {}) => {
+  const writeText = (info: any, style: any = {}, value?: any) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
@@ -268,6 +283,11 @@ const DrawingBoard: React.FC = () => {
     ctx.textBaseline = textBaseline;
     ctx.fillStyle = color;
     ctx.fillText(text, x, y);
+    if (value) {
+      const xAxis = textAlign === "left" ? 40 : textAlign === "right" ? 60 : "";
+      ctx.fillText(value, x + xAxis, y);
+    }
+
     ctx.stroke();
   };
 

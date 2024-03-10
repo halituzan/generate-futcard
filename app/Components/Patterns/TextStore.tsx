@@ -17,7 +17,7 @@ const TextStore: React.FC<InputProps> = ({
   type = "text",
   placeholder,
   className = "",
-  name,
+  name = "",
 }) => {
   const value = useSelector((state: any) => state.image);
 
