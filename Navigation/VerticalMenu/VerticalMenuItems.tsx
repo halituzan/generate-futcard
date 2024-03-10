@@ -4,11 +4,7 @@ import { useRouter } from "next/router";
 
 const VerticalMenuItems = ({ open, item }: any) => {
   const router = useRouter();
-  console.log(router);
-
   const pathname = router.pathname;
-
-  console.log(pathname);
 
   return (
     <button
@@ -25,7 +21,11 @@ const VerticalMenuItems = ({ open, item }: any) => {
        hover:before:scale-x-100
        hover:before:origin-left
       
-       ${item.path == pathname ? "border-blue-500 bg-blue-100" : "border-transparent hover:border-blue-500"}
+       ${
+         item.path == pathname
+           ? "border-blue-500 bg-blue-100"
+           : "border-transparent hover:border-blue-500"
+       }
       ${!open ? "justify-center pl-0" : "justify-start "}
       `}
       onClick={() => {

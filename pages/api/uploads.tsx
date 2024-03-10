@@ -5,12 +5,13 @@ import fs from "fs";
 import path from "path";
 import formidable from "formidable";
 import verifyUser from "@/helpers/middleware/verify.middleware";
-import User from "@/helpers/dbModels/userModel";
+import Users from "@/helpers/dbModels/userModel";
 import { v4 as uuidv4 } from "uuid";
 import Galleries from "@/helpers/dbModels/galleryModel";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const data = verifyUser(req.cookies.token);
+
 
   const form = new fd.IncomingForm();
   form.on("file", async (field: any, file: any) => {
@@ -21,7 +22,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         .json({ error: "Yalnızca resim dosyaları kabul edilir." });
     }
     try {
-      const user = await User.findOne({ _id: data });
+      const user = await Users.findOne({ _id: data });
 
       // Kullanıcının dosyalarını saklamak için klasör yolu
       const userFolderPath = path.join("public/uploads/", user.userName);
@@ -55,11 +56,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         });
       });
 
-      // Databasee kaydet
+      // Database'e kaydet
       const newGallery = new Galleries({
         userId: user._id,
         fileName: randomFileName + fileType,
-        title: randomFileName,
+        title: file.originalFilename,
       });
 
       await newGallery

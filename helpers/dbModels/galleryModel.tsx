@@ -2,8 +2,9 @@ import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 const gallerySchema = new Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: "Users" },
-  fileName: {
+  image: {
     type: String,
+    default: "",
   },
   title: {
     type: String,

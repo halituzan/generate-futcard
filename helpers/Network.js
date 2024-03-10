@@ -43,8 +43,8 @@ const Network = class NETWORK {
     return await this.network.get(path).then(r => r.data)
   }
 
-  postData = async (path, body) => {
-    return await this.network.post(path, body).then(r => r.data)
+  postData = async (path, body, header) => {
+    return await this.network.post(path, body, header).then(r => r.data)
   }
   patchData = async (path, body) => {
     return await this.network.patch(path, body).then(r => r.data)

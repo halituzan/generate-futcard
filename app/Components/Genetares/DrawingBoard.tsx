@@ -1,12 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
 import "@/Assets/css/globals.css";
 import Main from "@/pages";
+import { useSelector } from "react-redux";
 const DrawingBoard: React.FC = () => {
+  const resultImage = useSelector((state: { image: string }) => state.image);
+
+  const imgSrc = resultImage.image;
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [defaultImgSrc, setDefaultImgSrc] = useState<string | null>(
     "/images/soccer-card-blue-gold.png"
   );
-  const [imgSrc, setImgSrc] = useState<string | null>(null);
+
   const [dragging, setDragging] = useState(false);
   const [resizing, setResizing] = useState(false);
   const [startX, setStartX] = useState(0);
@@ -16,37 +20,34 @@ const DrawingBoard: React.FC = () => {
   const [width, setWidth] = useState(200); // Set a default width
   const [height, setHeight] = useState(200); // Set a default height
 
-  const [originalWidth, setOriginalWidth] = useState<number | null>(null);
-  const [originalHeight, setOriginalHeight] = useState<number | null>(null);
+  // const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   if (event.target.files && event.target.files[0]) {
+  //     const reader = new FileReader();
+  //     reader.onload = (e) => {
+  //       setStartX(0);
+  //       setStartY(0);
+  //       setOffsetX(0);
+  //       setOffsetY(0);
+  //       setWidth(200); // Reset width to default
+  //       setHeight(200); // Reset height to default
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files[0]) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setImgSrc(e.target?.result as string);
-        setStartX(0);
-        setStartY(0);
-        setOffsetX(0);
-        setOffsetY(0);
-        setWidth(200); // Reset width to default
-        setHeight(200); // Reset height to default
-
-        // Store the original dimensions of the image
-        const img = new Image();
-        img.onload = () => {
-          setOriginalWidth(img.width);
-          setOriginalHeight(img.height);
-        };
-        img.src = e.target?.result as string;
-      };
-      reader.readAsDataURL(event.target.files[0]);
-    }
-  };
+  //       // Store the original dimensions of the image
+  //       const img = new Image();
+  //       img.onload = () => {
+  //         setOriginalWidth(img.width);
+  //         setOriginalHeight(img.height);
+  //       };
+  //       img.src = e.target?.result as string;
+  //     };
+  //     reader.readAsDataURL(event.target.files[0]);
+  //   }
+  // };
 
   const handleMouseDown = (
     event: React.MouseEvent<HTMLCanvasElement, MouseEvent>
   ) => {
     const rect = canvasRef.current?.getBoundingClientRect();
+
     if (rect) {
       const mouseX = event.clientX - rect.left;
       const mouseY = event.clientY - rect.top;
@@ -69,6 +70,8 @@ const DrawingBoard: React.FC = () => {
   const handleMouseMove = (
     event: React.MouseEvent<HTMLCanvasElement, MouseEvent>
   ) => {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext("2d");
     if (dragging) {
       const rect = canvasRef.current?.getBoundingClientRect();
       if (rect) {
@@ -89,6 +92,9 @@ const DrawingBoard: React.FC = () => {
           // Update the state with the new dimensions
           setWidth(newWidth);
           setHeight(newHeight);
+          ctx.strokeStyle = "#f00"; // some color/style
+          ctx.lineWidth = 2;
+          ctx.strokeRect(offsetX, offsetY, width, height);
         } else {
           // Move the image based on mouse movement
           setOffsetX(offsetX + deltaX);
@@ -130,13 +136,14 @@ const DrawingBoard: React.FC = () => {
         const defaultImg = new Image();
         defaultImg.onload = () => {
           ctx.clearRect(0, 0, canvas.width, canvas.height);
-          ctx.drawImage(defaultImg, 0, 0, canvas.width, canvas.height);
+          ctx.drawImage(defaultImg, 0, 0, canvas.width - 200, canvas.height);
 
           // Draw the input-added image with the calculated dimensions
           if (imgSrc) {
             const img = new Image();
             img.onload = () => {
               ctx.drawImage(img, offsetX, offsetY, width, height);
+          
             };
             img.src = imgSrc;
           }
@@ -156,15 +163,18 @@ const DrawingBoard: React.FC = () => {
   ]);
 
   return (
-    <canvas
-      className='w-full p-10'
-      ref={canvasRef}
-      width={600}
-      height={600}
-      onMouseDown={handleMouseDown}
-      onMouseMove={handleMouseMove}
-      onMouseUp={handleMouseUp}
-    />
+    <>
+      <canvas
+        className='w-full p-10'
+        ref={canvasRef}
+        width={600}
+        height={600}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+      />
+      <button onClick={handleSaveImage}>Çıktı al</button>
+    </>
   );
 };
 

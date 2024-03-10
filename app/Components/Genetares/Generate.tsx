@@ -1,15 +1,27 @@
 import Main from "@/pages";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import DrawingBoard from "./DrawingBoard";
-import Button from "../Patterns/Buttons";
-import Upload from "./Upload";
+
 import Network from "@/helpers/Network";
+import axios from "axios";
+import { Icon } from "@iconify/react";
+import { useDispatch, useSelector } from "react-redux";
+import { selectImage, uploadImage } from "@/lib/features/image/imageSlice";
+import Button from "../Patterns/Buttons";
+import TextInput from "../Patterns/TextInput";
+import Variables from "./Variables";
 
 const Generate = () => {
   const uploadInput = useRef<HTMLInputElement>(null);
-  const [img, setImg] = useState<any>(null);
+
+  const dispatch = useDispatch();
   const [responseImage, setResponseImage] = useState("");
-  const uploadImage = () => {
+  const [selectedImage, setSelectedImage] = useState({
+    id: "",
+    image: "",
+  });
+  const [fileList, setFileList] = useState([]);
+  const upload = () => {
     setResponseImage("");
     if (!uploadInput.current) return;
     uploadInput.current.click();
@@ -17,12 +29,51 @@ const Generate = () => {
 
   const removeBg = async () => {
     try {
-      const { data } = await Network.postData("/api/remove", { url: img.name });
-      setResponseImage(data.data);
+      const { data } = await Network.postData("/api/remove", {
+        url: selectedImage.image,
+      });
+      setResponseImage(data);
+      dispatch(uploadImage(data));
     } catch (error) {
       console.log(error);
     }
   };
+
+  const uploadImageHandler = async (img: any) => {
+    if (!img) {
+      console.error("No file selected");
+      return;
+    }
+    const formData = new FormData();
+    formData.append("image", img);
+
+    try {
+      await axios
+        .post("api/upload", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then(async (res) => {
+          await getFiles();
+        });
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const getFiles = async () => {
+    try {
+      const res = await Network.getData("/api/user/g/galleries");
+      setFileList(res.resultList);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getFiles();
+  }, []);
 
   return (
     <Main>
@@ -33,23 +84,66 @@ const Generate = () => {
         <div className='upload-area flex-1 w-1/2 pl-4 flex flex-col'>
           <div className='flex w-full justify-between'>
             <Button
-              onClick={uploadImage}
+              onClick={upload}
               text='Yükle'
               iconLeft='solar:gallery-send-bold-duotone'
-              color='bg-blue-500 w-full'
+              color='bg-blue-500'
+              className='w-full rounded-b-none'
             />
             <input
               type='file'
               className='hidden'
               accept='image/png, image/jpeg'
               ref={uploadInput}
-              onChange={(e) =>
-                setImg(e.target.files ? e.target.files[0] : null)
-              }
+              onChange={(e) => {
+                if (e.target.files) {
+                  uploadImageHandler(e.target.files[0]);
+                }
+              }}
             />
           </div>
 
-          <Upload img={img} responseImage={responseImage} />
+          <div className='flex flex-wrap bg-blue-100/50'>
+            {fileList.map(
+              (item: { id: string; title: string; image: string }) => {
+                return (
+                  <div key={item.id} className='p-2 w-1/4 h-32 relative'>
+                    <img
+                      className={`w-full h-full object-cover hover:scale-[1.05] transition-all hover:shadow-sm rounded-md cursor-pointer
+                      ${
+                        selectedImage.id === item.id
+                          ? "border-2 border-blue-500"
+                          : "border border-transparent"
+                      }
+                      `}
+                      onClick={() => {
+                        if (selectedImage.id === item.id) {
+                          setSelectedImage({
+                            id: "",
+                            image: "",
+                          });
+                        } else {
+                          setSelectedImage(item);
+                        }
+                      }}
+                      src={item.image}
+                      alt={item.title}
+                    />
+                  </div>
+                );
+              }
+            )}
+            {selectedImage && <Variables />}
+          </div>
+          {selectedImage.id && (
+            <Button
+              text='Add Canvas'
+              iconLeft='icon-park-twotone:clear'
+              color='bg-blue-500'
+              className='w-full rounded-t-none'
+              onClick={removeBg}
+            />
+          )}
         </div>
       </div>
     </Main>

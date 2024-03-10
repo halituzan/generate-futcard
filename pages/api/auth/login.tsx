@@ -1,4 +1,4 @@
-import User from "@/helpers/dbModels/userModel";
+import Users from "@/helpers/dbModels/userModel";
 import connectDB from "@/helpers/dbConnect";
 const bcrypt = require("bcryptjs");
 import jwt from "jsonwebtoken";
@@ -11,7 +11,7 @@ const handler = async (req: any, res: any) => {
   const { userName, password } = req.body;
   try {
     // Check if user exists
-    const user = await User.findOne({ userName });
+    const user = await Users.findOne({ userName });
     if (!user) {
       return res.status(400).json({ message: "Bu kullanıcı adı mevcut değil.", status: false });
     }

@@ -7,7 +7,6 @@ type Props = {};
 const Sidebar = (props: Props) => {
   const [openSidebar, setOpenSidebar] = useState(true);
   const [openAllSidebar, setOpenAllSidebar] = useState(true);
-  console.log(openSidebar);
 
   return (
     <div
@@ -30,7 +29,7 @@ const Sidebar = (props: Props) => {
             <div
               className='relative flex justify-center items-center min-w-[16px] min-h-[16px] w-4 h-4 border-2 border-blue-800 rounded-full'
               onClick={() => {
-                setOpenAllSidebar(!openAllSidebar)
+                setOpenAllSidebar(!openAllSidebar);
               }}
             >
               {openAllSidebar && (

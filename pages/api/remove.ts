@@ -3,10 +3,9 @@ const { removeBackground } = require("@imgly/background-removal-node");
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { url } = req.body;
-  const baseUrl = "http://localhost:3000/";
 
   try {
-    const blob = await removeBackground(baseUrl + "/uploads/" + url);
+    const blob = await removeBackground(url);
     const buffer = Buffer.from(await blob.arrayBuffer());
     const dataURL = `data:image/png;base64,${buffer.toString("base64")}`;
     res.json({ data: dataURL });

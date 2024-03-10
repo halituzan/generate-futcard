@@ -1,4 +1,4 @@
-import User from "@/helpers/dbModels/userModel";
+import Users from "@/helpers/dbModels/userModel";
 import connectDB from "@/helpers/dbConnect";
 import jwt from "jsonwebtoken";
 import cookie from "cookie";
@@ -21,7 +21,7 @@ const handler = async (req: any, res: any) => {
   try {
     // Check if user already exists
 
-    const user = await User.findOne({
+    const user = await Users.findOne({
       $or: [{ email: email }, { userName: userName }],
     });
 
@@ -42,7 +42,7 @@ const handler = async (req: any, res: any) => {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     // Create new user
-    const newUser = new User({
+    const newUser = new Users({
       firstName,
       lastName,
       email,

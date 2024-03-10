@@ -1,6 +1,6 @@
-import Users from "@/helpers/dbModels/userModel";
 import connectDB from "@/helpers/dbConnect";
 import verifyUser from "@/helpers/middleware/verify.middleware";
+import Countries from "@/helpers/dbModels/countryModel";
 connectDB();
 
 const handler = async (req: any, res: any) => {
@@ -22,20 +22,11 @@ const handler = async (req: any, res: any) => {
     return;
   }
   try {
-    const user = await Users.findOne({ _id: data });
+    const countries = await Countries.find({});
     // Check if user exists
-    if (!user) {
-      return res
-        .status(401)
-        .json({ message: "Giriş Yetkiniz Bulunmamaktadır.", status: false });
-    }
 
     res.status(200).json({
-      firstName: user.firstName,
-      lastName: user.lastName,
-      userName: user.userName,
-      email: user.email,
-      isActive: user.isActive,
+      data: countries,
     });
   } catch (error) {
     console.error(error);

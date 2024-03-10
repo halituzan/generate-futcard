@@ -17,7 +17,7 @@ const RemoveBackground: React.FC = () => {
     formData.append("image", img);
 
     try {
-      await axios.post("api/uploads", formData, {
+      await axios.post("api/upload", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
