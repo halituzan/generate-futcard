@@ -14,29 +14,14 @@ import Variables from "./Variables";
 const Generate = () => {
   const uploadInput = useRef<HTMLInputElement>(null);
 
-  const dispatch = useDispatch();
-  const [responseImage, setResponseImage] = useState("");
   const [selectedImage, setSelectedImage] = useState({
     id: "",
     image: "",
   });
   const [fileList, setFileList] = useState([]);
   const upload = () => {
-    setResponseImage("");
     if (!uploadInput.current) return;
     uploadInput.current.click();
-  };
-
-  const removeBg = async () => {
-    try {
-      const { data } = await Network.postData("/api/remove", {
-        url: selectedImage.image,
-      });
-      setResponseImage(data);
-      dispatch(uploadImage(data));
-    } catch (error) {
-      console.log(error);
-    }
   };
 
   const uploadImageHandler = async (img: any) => {
@@ -133,17 +118,8 @@ const Generate = () => {
                 );
               }
             )}
-            {selectedImage && <Variables />}
+            {selectedImage && <Variables selectedImage={selectedImage} />}
           </div>
-          {selectedImage.id && (
-            <Button
-              text='Add Canvas'
-              iconLeft='icon-park-twotone:clear'
-              color='bg-blue-500'
-              className='w-full rounded-t-none'
-              onClick={removeBg}
-            />
-          )}
         </div>
       </div>
     </Main>

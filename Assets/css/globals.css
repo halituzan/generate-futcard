@@ -2,7 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+    font-family: 'DIN-Condensed-Bold';
+    src: url('/fonts/DIN-Condensed-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
 *, body {
     padding: 0;
     margin: 0;
+    font-family: "";
 }

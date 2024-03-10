@@ -1,11 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import "@/Assets/css/globals.css";
-import Main from "@/pages";
 import { useSelector } from "react-redux";
 const DrawingBoard: React.FC = () => {
-  const resultImage = useSelector((state: { image: string }) => state.image);
+  const result = useSelector((state: { image: any }) => state.image);
 
-  const imgSrc = resultImage.image;
+  const { position, totalPoint, pac, sho, pas, dri, def, phy, name, flag } =
+    result;
+  const imgSrc = result.image;
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [defaultImgSrc, setDefaultImgSrc] = useState<string | null>(
     "/images/soccer-card-blue-gold.png"
@@ -132,20 +133,107 @@ const DrawingBoard: React.FC = () => {
     if (canvas && defaultImgSrc) {
       const ctx = canvas.getContext("2d");
       if (ctx) {
-        // Draw the default image only when the component mounts
+        // Varsayılan görüntüyü yalnızca bileşen bağlandığında çizer
         const defaultImg = new Image();
         defaultImg.onload = () => {
           ctx.clearRect(0, 0, canvas.width, canvas.height);
-          ctx.drawImage(defaultImg, 0, 0, canvas.width - 200, canvas.height);
+          ctx.drawImage(defaultImg, 100, 0, canvas.width - 200, canvas.height);
 
-          // Draw the input-added image with the calculated dimensions
+          // Girilen görüntüyü hesaplanan boyutlarla çizer
           if (imgSrc) {
             const img = new Image();
             img.onload = () => {
               ctx.drawImage(img, offsetX, offsetY, width, height);
-          
             };
             img.src = imgSrc;
+            writeText(
+              { text: totalPoint, x: 203, y: 90 },
+              {
+                fontSize: 80,
+                color: "#fbffb2",
+                textAlign: "center",
+                textBaseline: "top",
+              }
+            );
+            writeText(
+              { text: position, x: 200, y: 155 },
+              {
+                fontSize: 40,
+                color: "#fbffb2",
+                textAlign: "center",
+                textBaseline: "top",
+              }
+            );
+            writeText(
+              { text: name, x: 300, y: 330 },
+              {
+                fontSize: 60,
+                color: "#fbffb2",
+                textAlign: "center",
+                textBaseline: "top",
+              }
+            );
+            writeText(
+              { text: pac + " PAC", x: 203, y: 410 },
+              {
+                fontSize: 40,
+                color: "#fbffb2",
+                textAlign: "center",
+                textBaseline: "left",
+              }
+            );
+            writeText(
+              { text: sho + " SHO", x: 203, y: 445 },
+              {
+                fontSize: 40,
+                color: "#fbffb2",
+                textAlign: "center",
+                textBaseline: "left",
+              }
+            );
+            writeText(
+              { text: pas + " PAS", x: 203, y: 480 },
+              {
+                fontSize: 40,
+                color: "#fbffb2",
+                textAlign: "center",
+                textBaseline: "left",
+              }
+            );
+            writeText(
+              { text: dri + " DRI", x: 400, y: 410 },
+              {
+                fontSize: 40,
+                color: "#fbffb2",
+                textAlign: "center",
+                textBaseline: "left",
+              }
+            );
+            writeText(
+              { text: def + " DEF", x: 400, y: 445 },
+              {
+                fontSize: 40,
+                color: "#fbffb2",
+                textAlign: "center",
+                textBaseline: "left",
+              }
+            );
+            writeText(
+              { text: phy + " PHY", x: 400, y: 480 },
+              {
+                fontSize: 40,
+                color: "#fbffb2",
+                textAlign: "center",
+                textBaseline: "left",
+              }
+            );
+          }
+          if (flag) {
+            const flagImage = new Image();
+            flagImage.onload = () => {
+              ctx.drawImage(flagImage, 170, 200, 60, 45);
+            };
+            flagImage.src = flag;
           }
         };
         defaultImg.src = defaultImgSrc;
@@ -161,6 +249,27 @@ const DrawingBoard: React.FC = () => {
     dragging,
     resizing,
   ]);
+
+  const writeText = (info: any, style: any = {}) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    const { text, x, y } = info;
+    const {
+      fontSize = 32,
+      color = "#fbffb2",
+      textAlign = "center",
+      textBaseline = "top",
+    } = style;
+    if (!ctx) return;
+    ctx.beginPath();
+    ctx.font = fontSize + "px " + "'DIN-Condensed-Bold', sans-serif";
+    ctx.textAlign = textAlign;
+    ctx.textBaseline = textBaseline;
+    ctx.fillStyle = color;
+    ctx.fillText(text, x, y);
+    ctx.stroke();
+  };
 
   return (
     <>
