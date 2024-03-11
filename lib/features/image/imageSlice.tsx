@@ -44,7 +44,7 @@ const imageSlice = createSlice({
     uploadTeam: (state: any, action: PayloadAction<{ payload: string }>) => {
       state.team = action.payload;
     },
-    uploadValues: (state: any, action: any) => {
+    uploadValues: (state: any, action: { payload: any }) => {
       const { key, data }: any = action.payload;
       state[key] = data;
     },

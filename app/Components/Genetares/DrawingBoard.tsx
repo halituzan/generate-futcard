@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import "@/Assets/css/globals.css";
 import { useSelector } from "react-redux";
+import Button from "../Patterns/Buttons";
 const DrawingBoard: React.FC = () => {
   const result = useSelector((state: { image: any }) => state.image);
 
@@ -140,6 +141,10 @@ const DrawingBoard: React.FC = () => {
         defaultImg.onload = () => {
           ctx.clearRect(0, 0, canvas.width, canvas.height);
           ctx.drawImage(defaultImg, 100, 0, canvas.width - 200, canvas.height);
+          ctx.beginPath();
+          ctx.fillStyle = "#fbffb2";
+          ctx.fillRect(168, 193, 65, 2);
+          ctx.fillRect(168, 250, 65, 2);
 
           // Girilen görüntüyü hesaplanan boyutlarla çizer
           if (imgSrc) {
@@ -294,7 +299,7 @@ const DrawingBoard: React.FC = () => {
   return (
     <>
       <canvas
-        className='w-full p-10'
+        className='w-full p-10 shadow-[inset_0_0_20px_2px_rgba(0,0,0,0.1)]'
         ref={canvasRef}
         width={600}
         height={600}
@@ -302,7 +307,11 @@ const DrawingBoard: React.FC = () => {
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
       />
-      <button onClick={handleSaveImage}>Çıktı al</button>
+      <Button
+        className='bg-blue-500 w-full rounded-t-none'
+        onClick={handleSaveImage}
+        text='Print'
+      />
     </>
   );
 };

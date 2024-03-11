@@ -34,6 +34,9 @@ const config: Config = {
         "800": "800",
         "900": "900",
       },
+      fontFamily:{
+        din:"DIN-Condensed-Bold"
+      },
       animation: {
         flip: 'flip 1s cubic-bezier(0, 0, 0.2, 1) infinite'
       },

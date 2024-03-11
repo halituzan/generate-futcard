@@ -21,7 +21,7 @@ const Variables = ({ selectedImage }: Props) => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
 
-  const [countryList, setCountryList] = useState([]);
+  const [countryList, setCountryList] = useState([])
   const [selectedCountry, setSelectedCountry] = useState("");
 
   const [name, setName] = useState("");
@@ -73,7 +73,7 @@ const Variables = ({ selectedImage }: Props) => {
   }, []);
 
   return (
-    <>
+    <div className='flex flex-col w-full flex-1 h-auto'>
       <div className='px-2 py-4 border-t w-full flex flex-col'>
         <div className='flex items-center justify-between'>
           <TextInput
@@ -81,27 +81,27 @@ const Variables = ({ selectedImage }: Props) => {
             label='Name'
             set={name}
             placeholder='Name'
-            className='w-[32%]'
+            className='w-[31%]'
           />
           <TextInput
             setter={setPosition}
             label='Position'
             set={position}
             placeholder='Position'
-            className='w-[32%]'
+            className='w-[31%]'
           />
           <TextInput
             setter={setTotalPoint}
             label='Total Point (1 - 99)'
             set={totalPoint}
             placeholder='Total Point'
-            className='w-[32%]'
+            className='w-[31%]'
             type='number'
             min='1'
             max='99'
           />
         </div>
-        <div className='flex items-center'>
+        <div className='flex items-center my-2'>
           <div className='w-12 h-9 flex justify-center items-center bg-slate/20 rounded-l-[7px]  '>
             <img
               src={
@@ -120,14 +120,14 @@ const Variables = ({ selectedImage }: Props) => {
                 }`
               );
             }}
-            className='peer border border-slate border-l-0 rounded-l-none outline-none text-slate-dark font-600 text-[12px] focus:border-slate-dark px-3 py-2 rounded-[7px] my-1 w-full'
+            className='peer border border-slate border-l-0 rounded-l-none outline-none text-slate-dark font-600 text-[12px] focus:border-slate-dark px-3 py-2 rounded-[7px]  w-full'
           >
             {countryList.map((item: { name: string; id: number }, index) => {
               return <option value={item.id}>{item.name}</option>;
             })}
           </select>
         </div>
-        <div className='flex w-full justify-between mt-2'>
+        <div className='flex w-full justify-between'>
           <div className='w-[48%] flex flex-col'>
             <TextInput
               setter={setPac}
@@ -200,7 +200,7 @@ const Variables = ({ selectedImage }: Props) => {
           />
         </div>
       )}
-    </>
+    </div>
   );
 };
 

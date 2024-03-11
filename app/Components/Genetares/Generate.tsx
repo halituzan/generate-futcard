@@ -40,7 +40,8 @@ const Generate = () => {
           },
         })
         .then(async (res) => {
-          await getFiles();
+          const response = await Network.getData("/api/user/g/galleries");
+          setFileList(response.resultList);
         });
     } catch (error) {
       console.error("Error:", error);
@@ -70,7 +71,7 @@ const Generate = () => {
           <div className='flex w-full justify-between'>
             <Button
               onClick={upload}
-              text='Yükle'
+              text='Upload'
               iconLeft='solar:gallery-send-bold-duotone'
               color='bg-blue-500'
               className='w-full rounded-b-none'
@@ -88,37 +89,53 @@ const Generate = () => {
             />
           </div>
 
-          <div className='flex flex-wrap bg-blue-100/50'>
-            {fileList.map(
-              (item: { id: string; title: string; image: string }) => {
-                return (
-                  <div key={item.id} className='p-2 w-1/4 h-32 relative'>
-                    <img
-                      className={`w-full h-full object-cover hover:scale-[1.05] transition-all hover:shadow-sm rounded-md cursor-pointer
+          <div className='flex flex-col bg-blue-100/50'>
+            <div className='flex flex-wrap'>
+              {fileList.length > 0 ? (
+                fileList.map(
+                  (item: { id: string; title: string; image: string }) => {
+                    return (
+                      <div key={item.id} className='p-2 w-1/4 h-32 relative'>
+                        <img
+                          className={`w-full h-full object-cover hover:scale-[1.05] transition-all hover:shadow-sm rounded-md cursor-pointer
                       ${
                         selectedImage.id === item.id
                           ? "border-2 border-blue-500"
                           : "border border-transparent"
                       }
                       `}
-                      onClick={() => {
-                        if (selectedImage.id === item.id) {
-                          setSelectedImage({
-                            id: "",
-                            image: "",
-                          });
-                        } else {
-                          setSelectedImage(item);
-                        }
-                      }}
-                      src={item.image}
-                      alt={item.title}
-                    />
-                  </div>
-                );
-              }
-            )}
-            {selectedImage && <Variables selectedImage={selectedImage} />}
+                          onClick={() => {
+                            if (selectedImage.id === item.id) {
+                              setSelectedImage({
+                                id: "",
+                                image: "",
+                              });
+                            } else {
+                              setSelectedImage(item);
+                            }
+                          }}
+                          src={item.image}
+                          alt={item.title}
+                        />
+                      </div>
+                    );
+                  }
+                )
+              ) : (
+                <div
+                  onClick={upload}
+                  className='p-2 flex justify-center items-center h-32 relative cursor-pointer'
+                >
+                  <Icon
+                    icon='solar:gallery-send-bold-duotone'
+                    className='mr-2 text-blue-500'
+                    fontSize={30}
+                  />
+                  <p className='font-din text-2xl'>Please add a picture.</p>
+                </div>
+              )}
+            </div>
+            {selectedImage.id && <Variables selectedImage={selectedImage} />}
           </div>
         </div>
       </div>
