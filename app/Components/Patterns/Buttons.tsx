@@ -2,7 +2,7 @@ import * as React from "react";
 import { Icon } from "@iconify/react";
 
 export interface ButtonProps {
-  text: string;
+  text?: string;
   height?: string;
   width?: string;
   iconLeft?: string;
@@ -13,6 +13,7 @@ export interface ButtonProps {
   textColor?: string;
   iconSize?: number;
   mr?: string;
+  tooltip?: string;
   onClick?: () => void;
 }
 
@@ -28,10 +29,11 @@ const Button: React.FC<ButtonProps> = ({
   mr,
   textColor = "text-white",
   iconSize = 24,
+  tooltip,
   onClick,
 }) => {
   return (
-    <div className={`flex flex-col w-full ${mr && "mr-" + mr}`}>
+    <div className={`flex flex-col w-full font-din  ${mr && "mr-" + mr}`}>
       <button
         className={`
         ${iconLeft || iconRight ? "justify-center" : "justify-center"}
@@ -46,11 +48,16 @@ const Button: React.FC<ButtonProps> = ({
         `}
         disabled={disabled}
         onClick={onClick}
+        title={tooltip && tooltip}
       >
         {iconLeft && (
-          <Icon fontSize={iconSize} icon={iconLeft} className='mr-2' />
+          <Icon
+            fontSize={iconSize}
+            icon={iconLeft}
+            className={`${text && "mr-2"}`}
+          />
         )}
-        {text}
+        {text && text}
         {iconRight && (
           <Icon fontSize={iconSize} icon={iconRight} className='ml-2' />
         )}
@@ -71,7 +78,7 @@ export declare interface InputProps {
   className?: string;
   textColor?: string;
   iconSize?: number;
-
   mr?: string;
+  tooltip?: string;
   onClick?: () => void;
 }

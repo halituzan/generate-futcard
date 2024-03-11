@@ -1,28 +1,30 @@
-import React, { useEffect, useState } from "react";
-import TextInput from "../Patterns/TextInput";
-import { countries } from "country-flag-icons";
-import { useDispatch } from "react-redux";
-import { Icon } from "@iconify/react";
+import Network from "@/helpers/Network";
+import fileToBase64 from "@/helpers/fileToBase64";
 import {
-  selectImage,
   uploadFlag,
   uploadImage,
+  uploadTeam,
   uploadValues,
 } from "@/lib/features/image/imageSlice";
-import TextStore from "../Patterns/TextStore";
-import Network from "@/helpers/Network";
+import { Icon } from "@iconify/react";
+import { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import Button from "../Patterns/Buttons";
-
+import TextInput from "../Patterns/TextInput";
 type Props = {
   selectedImage: any;
 };
 
 const Variables = ({ selectedImage }: Props) => {
+  const uploadInput = useRef<HTMLInputElement>(null);
   const dispatch = useDispatch();
-  const [loading, setLoading] = useState(false);
+  const result = useSelector((state: { image: any }) => state.image);
 
-  const [countryList, setCountryList] = useState([])
+  const [loading, setLoading] = useState(false);
+  const [countryList, setCountryList] = useState([]);
   const [selectedCountry, setSelectedCountry] = useState("");
+  const [selectTeam, setSelectTeam] = useState(null);
+  const [selectTeamBase64, setSelectTeamBase64] = useState("");
 
   const [name, setName] = useState("");
   const [totalPoint, setTotalPoint] = useState("");
@@ -43,10 +45,21 @@ const Variables = ({ selectedImage }: Props) => {
     }
   };
 
+  const upload = () => {
+    if (!uploadInput.current) return;
+    uploadInput.current.click();
+  };
+
+  const inputChangeHandler = async (e: any) => {
+    const res = await fileToBase64(e.target.files[0]);
+
+    setSelectTeam(e.target.files[0]);
+    setSelectTeamBase64(res);
+  };
+
   const removeBg = async () => {
     setLoading(true);
     try {
-      dispatch(uploadFlag(selectedCountry));
       dispatch(uploadValues({ key: "name", data: name }));
       dispatch(uploadValues({ key: "totalPoint", data: totalPoint }));
       dispatch(uploadValues({ key: "position", data: position }));
@@ -56,11 +69,13 @@ const Variables = ({ selectedImage }: Props) => {
       dispatch(uploadValues({ key: "dri", data: dri }));
       dispatch(uploadValues({ key: "def", data: def }));
       dispatch(uploadValues({ key: "phy", data: phy }));
+
       const { data } = await Network.postData("/api/remove", {
         url: selectedImage.image,
       });
       dispatch(uploadImage(data));
-
+      dispatch(uploadFlag(selectedCountry));
+      dispatch(uploadTeam(selectTeamBase64));
       setLoading(false);
     } catch (error) {
       console.log(error);
@@ -101,32 +116,7 @@ const Variables = ({ selectedImage }: Props) => {
             max='99'
           />
         </div>
-        <div className='flex items-center my-2'>
-          <div className='w-12 h-9 flex justify-center items-center bg-slate/20 rounded-l-[7px]  '>
-            <img
-              src={
-                selectedCountry
-                  ? selectedCountry
-                  : `data:image/png;base64,${countryList[0]?.flag}`
-              }
-              className='h-full object-cover rounded-l-[7px]'
-            />
-          </div>
-          <select
-            onChange={(e) => {
-              setSelectedCountry(
-                `data:image/png;base64,${
-                  countryList.find((env: any) => env.id == e.target.value)?.flag
-                }`
-              );
-            }}
-            className='peer border border-slate border-l-0 rounded-l-none outline-none text-slate-dark font-600 text-[12px] focus:border-slate-dark px-3 py-2 rounded-[7px]  w-full'
-          >
-            {countryList.map((item: { name: string; id: number }, index) => {
-              return <option value={item.id}>{item.name}</option>;
-            })}
-          </select>
-        </div>
+
         <div className='flex w-full justify-between'>
           <div className='w-[48%] flex flex-col'>
             <TextInput
@@ -181,13 +171,71 @@ const Variables = ({ selectedImage }: Props) => {
             />
           </div>
         </div>
+        <div className='flex items-center w-full'>
+          <div className='w-full'>
+            <div className='flex items-center my-2'>
+              <div className='w-12 h-9 flex justify-center items-center bg-slate/20 rounded-l-[7px]  '>
+                <img
+                  src={
+                    selectedCountry
+                      ? selectedCountry
+                      : `data:image/png;base64,${countryList[0]?.flag}`
+                  }
+                  className='h-full object-cover rounded-l-[7px]'
+                />
+              </div>
+              <select
+                onChange={(e) => {
+                  setSelectedCountry(
+                    `data:image/png;base64,${
+                      countryList.find((env: any) => env.id == e.target.value)
+                        ?.flag
+                    }`
+                  );
+                }}
+                className='peer border border-slate border-l-0 rounded-l-none outline-none text-slate-dark font-600 text-[12px] focus:border-slate-dark px-3 py-2 rounded-[7px]  w-full'
+              >
+                {countryList.map(
+                  (item: { name: string; id: number }, index) => {
+                    return <option value={item.id}>{item.name}</option>;
+                  }
+                )}
+              </select>
+            </div>
+            <Button
+              text='Add Team Logo'
+              iconLeft='line-md:uploading-loop'
+              color='bg-blue-500'
+              className='w-full h-10'
+              onClick={upload}
+            />
+            <input
+              type='file'
+              className='hidden'
+              accept='image/png, image/jpeg'
+              ref={uploadInput}
+              onChange={(e) => {
+                inputChangeHandler(e);
+              }}
+            />
+          </div>
+          <div className='w-full flex justify-center items-center mt-2'>
+            {selectTeam && (
+              <img
+                src={URL.createObjectURL(selectTeam)}
+                alt='team'
+                className='w-[92px] h-[92px]'
+              />
+            )}
+          </div>
+        </div>
       </div>
       {selectedImage.id && (
         <Button
           text='Add Canvas'
-          iconLeft='icon-park-twotone:clear'
+          iconLeft='carbon:spray-paint'
           color='bg-blue-500'
-          className='w-full rounded-t-none'
+          className='w-full rounded-t-none text-xl'
           onClick={removeBg}
         />
       )}

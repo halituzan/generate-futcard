@@ -1,17 +1,37 @@
 import React, { useEffect, useRef, useState } from "react";
 import "@/Assets/css/globals.css";
-import { useSelector } from "react-redux";
+import { Icon } from "@iconify/react";
+import { useDispatch, useSelector } from "react-redux";
 import Button from "../Patterns/Buttons";
+import { changeCoords } from "@/lib/features/coordinates/coordSlice";
 const DrawingBoard: React.FC = () => {
+  const dispatch = useDispatch();
   const result = useSelector((state: { image: any }) => state.image);
+  const coords = useSelector(
+    (state: { coord: { x: number; y: number } }) => state.coord
+  );
 
-  const { position, totalPoint, pac, sho, pas, dri, def, phy, name, flag } =
-    result;
+  const {
+    position,
+    totalPoint,
+    pac,
+    sho,
+    pas,
+    dri,
+    def,
+    phy,
+    name,
+    flag,
+    team,
+    angle,
+    defaultImgSrc,
+  } = result;
+
   const imgSrc = result.image;
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const [defaultImgSrc, setDefaultImgSrc] = useState<string | null>(
-    "/images/soccer-card-blue-gold.png"
-  );
+  // const [defaultImgSrc, setDefaultImgSrc] = useState<string | null>(
+  //   "/images/soccer-card-blue-gold.png"
+  // );
 
   const [dragging, setDragging] = useState(false);
   const [resizing, setResizing] = useState(false);
@@ -128,6 +148,16 @@ const DrawingBoard: React.FC = () => {
       // Trigger a click on the link to start the download
       link.click();
     }
+  };
+
+  const handleCoords = () => {
+    //* Resmi canvas üzerinde doğru konuma yerleştirir
+    if (!canvasRef.current) return;
+    const canvasWidth: number = canvasRef.current?.width / 2;
+    const canvasHeight: number = canvasRef.current?.height / 2;
+
+    setOffsetX(canvasWidth + 40 - width / 2);
+    setOffsetY(canvasHeight + 50 - height - 34);
   };
 
   useEffect(() => {
@@ -248,14 +278,21 @@ const DrawingBoard: React.FC = () => {
             );
           }
           if (flag) {
-            const flagImage = new Image();
+            let flagImage = new Image();
             flagImage.onload = () => {
               ctx.drawImage(flagImage, 170, 200, 60, 45);
             };
             flagImage.src = flag;
           }
+          if (team) {
+            let teamImage = new Image();
+            teamImage.onload = () => {
+              ctx.drawImage(teamImage, 175, 255, 55, 55);
+            };
+            teamImage.src = team;
+          }
         };
-        defaultImg.src = defaultImgSrc;
+        defaultImg.src = "/images/" + defaultImgSrc + ".png";
       }
     }
   }, [
@@ -297,7 +334,7 @@ const DrawingBoard: React.FC = () => {
   };
 
   return (
-    <>
+    <div className='relative'>
       <canvas
         className='w-full p-10 shadow-[inset_0_0_20px_2px_rgba(0,0,0,0.1)]'
         ref={canvasRef}
@@ -308,11 +345,21 @@ const DrawingBoard: React.FC = () => {
         onMouseUp={handleMouseUp}
       />
       <Button
-        className='bg-blue-500 w-full rounded-t-none'
+        className='bg-blue-500 w-full rounded-t-none text-xl font-din'
         onClick={handleSaveImage}
-        text='Print'
+        iconLeft='ant-design:save-twotone'
+        text='Save'
       />
-    </>
+      <div className='button-list flex flex-col absolute top-2 right-2'>
+        <Button
+          className='bg-blue-500 flex items-center justify-center rounded-md w-8 h-8 font-din'
+          onClick={handleCoords}
+          iconSize={20}
+          tooltip='Position the Image'
+          iconLeft='vaadin:absolute-position'
+        />
+      </div>
+    </div>
   );
 };
 

@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import React from "react";
 
 interface ValueProps {
+  defaultImgSrc: string;
   image: string;
   totalPoint: string;
   name: string;
@@ -14,6 +15,7 @@ interface ValueProps {
   dri: string;
   def: string;
   phy: string;
+  angle: number;
 }
 
 const initialState: ValueProps = {
@@ -29,6 +31,8 @@ const initialState: ValueProps = {
   dri: "",
   def: "",
   phy: "",
+  angle: 90,
+  defaultImgSrc: "1",
 };
 
 const imageSlice = createSlice({
@@ -41,7 +45,7 @@ const imageSlice = createSlice({
     uploadFlag: (state: any, action: { payload: any }) => {
       state.flag = action.payload;
     },
-    uploadTeam: (state: any, action: PayloadAction<{ payload: string }>) => {
+    uploadTeam: (state: any, action: { payload: any }) => {
       state.team = action.payload;
     },
     uploadValues: (state: any, action: { payload: any }) => {
