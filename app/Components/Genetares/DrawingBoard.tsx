@@ -1,10 +1,13 @@
 import "@/Assets/css/globals.css";
-import { clearState, uploadValues } from "@/lib/features/image/imageSlice";
+import { clearState } from "@/lib/features/image/imageSlice";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "../Patterns/Buttons";
 import { blueGold } from "./Cards/BlueCard/blueGold";
-import { frame } from "./Cards/BlueCard/frame";
+// import { frame } from "./Cards/BlueCard/frame";
+import { v4 as uuidv4 } from "uuid";
+import CardDopdown from "./CardDopdown";
+import { valuesGenerate } from "./Cards/BlueCard/values";
 const svgData = `<?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 28.3.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <svg version="1.1" id="katman_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
@@ -27,38 +30,14 @@ const cardList = [
   {
     id: 1,
     name: "Blue Gold",
+    color: "#fbffb2",
+    columnColor: "#101f3d",
   },
   {
     id: 2,
     name: "Gold",
-  },
-  {
-    id: 3,
-    name: "Black Gold",
-  },
-  {
-    id: 4,
-    name: "Black Gold",
-  },
-  {
-    id: 5,
-    name: "Black Gold",
-  },
-  {
-    id: 6,
-    name: "Black Gold",
-  },
-  {
-    id: 7,
-    name: "Black Gold",
-  },
-  {
-    id: 8,
-    name: "Black Gold",
-  },
-  {
-    id: 9,
-    name: "Black Gold",
+    color: "#000000",
+    columnColor: "#CFB95C",
   },
 ];
 
@@ -98,6 +77,8 @@ const DrawingBoard: React.FC = () => {
     flag,
     team,
     defaultImgSrc,
+    color,
+    columnColor,
   } = result;
   console.log(result);
 
@@ -191,7 +172,7 @@ const DrawingBoard: React.FC = () => {
       // Create a download link
       const link = document.createElement("a");
       link.href = dataURL;
-      link.download = "canvas_image.png";
+      link.download = uuidv4();
 
       // Trigger a click on the link to start the download
       link.click();
@@ -214,7 +195,7 @@ const DrawingBoard: React.FC = () => {
           ctx.clearRect(0, 0, canvas.width, canvas.height);
           ctx.drawImage(defaultImg, 100, 0, canvas.width - 200, canvas.height);
 
-          blueGold(ctx, canvas.width, canvas.height);
+          blueGold(ctx, canvas.width, canvas.height, color, columnColor);
 
           // Girilen görüntüyü hesaplanan boyutlarla çizer
           if (imgSrc) {
@@ -224,119 +205,20 @@ const DrawingBoard: React.FC = () => {
             };
             img.src = imgSrc;
 
-            //* Total Point
-            const xTotalPoint = canvasWidth * 0.3383334; // 203
-            const yTotalPoint = canvasHeight * 0.15; // 90
-            writeText(
-              { text: totalPoint, x: xTotalPoint, y: yTotalPoint },
-              {
-                fontSize: 80,
-                color: "#fbffb2",
-                textAlign: "center",
-                textBaseline: "top",
-              }
-            );
-            //* Position
-            const xPosition = canvasWidth * 0.33334; // 200
-            const yPosition = canvasHeight * 0.25834; // 155
-            writeText(
-              { text: position, x: xPosition, y: yPosition },
-              {
-                fontSize: 40,
-                color: "#fbffb2",
-                textAlign: "center",
-                textBaseline: "top",
-              }
-            );
-            //* Name
-            const xName = canvasWidth * 0.5; // 300
-            const yName = canvasHeight * 0.55; // 330
-            writeText(
-              { text: name, x: xName, y: yName },
-              {
-                fontSize: 60,
-                color: "#fbffb2",
-                textAlign: "center",
-                textBaseline: "top",
-              }
-            );
-            //* PAC
-            const xPac = canvasWidth * 0.26667; // 160
-            const yPac = canvasHeight * 0.68334; // 410
-            writeText(
-              { text: pac, x: xPac, y: yPac },
-              {
-                fontSize: 40,
-                color: "#fbffb2",
-                textAlign: "left",
-                textBaseline: "left",
-              },
-              "PAC"
-            );
-            //* SHO
-            const xSho = canvasWidth * 0.26667; // 160
-            const ySho = canvasHeight * 0.741668; // 445
-            writeText(
-              { text: sho, x: xSho, y: ySho },
-              {
-                fontSize: 40,
-                color: "#fbffb2",
-                textAlign: "left",
-                textBaseline: "left",
-              },
-              "SHO"
-            );
-            //* PAS
-            const xPas = canvasWidth * 0.26667; // 160
-            const yPas = canvasHeight * 0.8; // 480
-            writeText(
-              { text: pas, x: xPas, y: yPas },
-              {
-                fontSize: 40,
-                color: "#fbffb2",
-                textAlign: "left",
-                textBaseline: "left",
-              },
-              "PAS"
-            );
-            //* DRI
-            const xDri = canvasWidth * 0.583334; // 350
-            const yDri = canvasHeight * 0.68334; // 410
-            writeText(
-              { text: dri, x: xDri, y: yDri },
-              {
-                fontSize: 40,
-                color: "#fbffb2",
-                textAlign: "left",
-                textBaseline: "left",
-              },
-              "DRI"
-            );
-            //* DEF
-            const xDef = canvasWidth * 0.583334; // 350
-            const yDef = canvasHeight * 0.741668; // 445
-            writeText(
-              { text: def, x: xDef, y: yDef },
-              {
-                fontSize: 40,
-                color: "#fbffb2",
-                textAlign: "left",
-                textBaseline: "left",
-              },
-              "DEF"
-            );
-            //* PHY
-            const xPhy = canvasWidth * 0.583334; // 350
-            const yPhy = canvasHeight * 0.8; // 480
-            writeText(
-              { text: phy, x: xPhy, y: yPhy },
-              {
-                fontSize: 40,
-                color: "#fbffb2",
-                textAlign: "left",
-                textBaseline: "left",
-              },
-              "PHY"
+            valuesGenerate(
+              ctx,
+              canvasWidth,
+              canvasHeight,
+              totalPoint,
+              color,
+              name,
+              position,
+              pac,
+              pas,
+              def,
+              sho,
+              dri,
+              phy
             );
           }
           if (flag) {
@@ -375,7 +257,6 @@ const DrawingBoard: React.FC = () => {
         };
 
         defaultImg.src = "/images/" + defaultImgSrc + ".png";
-      
       }
     }
   }, [
@@ -391,32 +272,6 @@ const DrawingBoard: React.FC = () => {
     svgData,
   ]);
 
-  const writeText = (info: any, style: any = {}, value?: any) => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    const { text, x, y } = info;
-    const {
-      fontSize = 32,
-      color = "#fbffb2",
-      textAlign = "center",
-      textBaseline = "top",
-    } = style;
-    if (!ctx) return;
-    ctx.beginPath();
-    ctx.font = fontSize + "px " + "'DIN-Condensed-Bold', sans-serif";
-    ctx.textAlign = textAlign;
-    ctx.textBaseline = textBaseline;
-    ctx.fillStyle = color;
-    ctx.fillText(text, x, y);
-    if (value) {
-      const xAxis = textAlign === "left" ? 40 : textAlign === "right" ? 60 : "";
-      ctx.fillText(value, x + xAxis, y);
-    }
-
-    ctx.stroke();
-  };
-
   const handleCoords = () => {
     //* Resmi canvas üzerinde doğru konuma yerleştirir
     if (!canvasRef.current) return;
@@ -424,7 +279,7 @@ const DrawingBoard: React.FC = () => {
     const canvasHeight: number = canvasRef.current?.height / 2;
 
     setOffsetX(canvasWidth + 40 - width / 2);
-    setOffsetY(canvasHeight + 50 - height - 34);
+    setOffsetY(canvasHeight + 50 - height - 33);
   };
 
   const handleClear = () => {
@@ -480,31 +335,7 @@ const DrawingBoard: React.FC = () => {
             iconLeft='formkit:select'
           />
           {openCards && (
-            <div className='absolute top-8 left-0 p-2 rounded-lg bg-white min-w-52 flex flex-wrap'>
-              {cardList.map((i) => {
-                return (
-                  <div
-                    key={i.id}
-                    className=''
-                    onClick={() => {
-                      setOpenCards(false);
-                      dispatch(
-                        uploadValues({
-                          key: "defaultImgSrc",
-                          data: i.id.toString(),
-                        })
-                      );
-                    }}
-                  >
-                    <img
-                      src={"images/" + i.id + ".png"}
-                      className='w-16 px-1 cursor-pointer hover:scale-[1.05]'
-                      alt={i.name}
-                    />
-                  </div>
-                );
-              })}
-            </div>
+            <CardDopdown setOpenCards={setOpenCards} cardList={cardList} />
           )}
         </div>
       </div>

@@ -16,6 +16,8 @@ interface ValueProps {
   def: string;
   phy: string;
   angle: number;
+  color: string;
+  columnColor: string;
 }
 
 const initialState: ValueProps = {
@@ -33,6 +35,8 @@ const initialState: ValueProps = {
   phy: "",
   angle: 90,
   defaultImgSrc: "1",
+  color: "#fbffb2",
+  columnColor: "#101f3d",
 };
 
 const imageSlice = createSlice({
@@ -66,6 +70,8 @@ const imageSlice = createSlice({
       state.def = "";
       state.phy = "";
       state.defaultImgSrc = "1";
+      state.color = "#fbffb2";
+      state.columnColor = "#101f3d";
     },
   },
 });
