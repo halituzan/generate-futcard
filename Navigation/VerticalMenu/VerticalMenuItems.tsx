@@ -41,7 +41,7 @@ const VerticalMenuItems = ({ open, item }: any) => {
 
         {open && (
           <span
-            className='flex-1 flex font-600 uppercase'
+            className='flex-1 flex font-600 uppercase font-din text-lg'
             style={{ padding: "0px 10px" }}
           >
             {item.label}

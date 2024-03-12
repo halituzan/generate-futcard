@@ -22,7 +22,7 @@ const Sidebar = (props: Props) => {
         openSidebar ? "w-[300px]" : "w-[75px]"
       } pt-4 bg-white shadow-xl h-screen sidebar flex flex-col transition-all`}
     >
-      <div className='px-4 flex items-center justify-center w-full mb-5'>
+      <div className='px-4 flex items-center justify-center w-full mb-5 '>
         <h2 className='text-xl font-bold flex-1 text-blue-500'>Logo</h2>
         <div className='cursor-pointer'>
           {openSidebar && (
