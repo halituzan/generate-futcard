@@ -12,6 +12,7 @@ export interface InputProps {
   className?: string;
   direction?: string;
   items?: string;
+  w?: string;
   subLabel?: string | React.ReactNode;
 }
 
@@ -27,12 +28,13 @@ const TextInput: React.FC<InputProps> = ({
   max,
   direction = "flex-col",
   items = "items-start",
+  w = "w-full",
 }) => {
   const [focus, setFocus] = React.useState(false);
   const [inputType, setInputType] = React.useState(type);
 
   return (
-    <div className={`flex ${direction} ${items} w-full ${className}`}>
+    <div className={`flex ${direction} ${items} ${w} ${className}`}>
       {label && (
         <label htmlFor={`${label}-input`} className='text-sm font-normal'>
           {label}
@@ -104,5 +106,6 @@ export declare interface InputProps {
   direction?: string;
   items?: string;
   min?: string;
+  w?: string;
   max?: string;
 }

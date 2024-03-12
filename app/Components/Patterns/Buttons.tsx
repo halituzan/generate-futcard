@@ -33,7 +33,7 @@ const Button: React.FC<ButtonProps> = ({
   onClick,
 }) => {
   return (
-    <div className={`flex flex-col w-full font-din  ${mr && "mr-" + mr}`}>
+    <div className={`flex flex-col w-full font-din ${mr && "mr-" + mr}`}>
       <button
         className={`
         ${iconLeft || iconRight ? "justify-center" : "justify-center"}
@@ -45,6 +45,7 @@ const Button: React.FC<ButtonProps> = ({
         text-[14px] flex items-center rounded-lg
         font-700
         justify-center
+        text-xl
         `}
         disabled={disabled}
         onClick={onClick}

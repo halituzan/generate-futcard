@@ -1,15 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
 import "@/Assets/css/globals.css";
-import { Icon } from "@iconify/react";
+import { clearState } from "@/lib/features/image/imageSlice";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "../Patterns/Buttons";
-import { changeCoords } from "@/lib/features/coordinates/coordSlice";
 const DrawingBoard: React.FC = () => {
   const dispatch = useDispatch();
   const result = useSelector((state: { image: any }) => state.image);
-  const coords = useSelector(
-    (state: { coord: { x: number; y: number } }) => state.coord
-  );
 
   const {
     position,
@@ -23,15 +19,11 @@ const DrawingBoard: React.FC = () => {
     name,
     flag,
     team,
-    angle,
     defaultImgSrc,
   } = result;
 
   const imgSrc = result.image;
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  // const [defaultImgSrc, setDefaultImgSrc] = useState<string | null>(
-  //   "/images/soccer-card-blue-gold.png"
-  // );
 
   const [dragging, setDragging] = useState(false);
   const [resizing, setResizing] = useState(false);
@@ -41,29 +33,6 @@ const DrawingBoard: React.FC = () => {
   const [offsetY, setOffsetY] = useState(0);
   const [width, setWidth] = useState(200); // Set a default width
   const [height, setHeight] = useState(200); // Set a default height
-
-  // const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   if (event.target.files && event.target.files[0]) {
-  //     const reader = new FileReader();
-  //     reader.onload = (e) => {
-  //       setStartX(0);
-  //       setStartY(0);
-  //       setOffsetX(0);
-  //       setOffsetY(0);
-  //       setWidth(200); // Reset width to default
-  //       setHeight(200); // Reset height to default
-
-  //       // Store the original dimensions of the image
-  //       const img = new Image();
-  //       img.onload = () => {
-  //         setOriginalWidth(img.width);
-  //         setOriginalHeight(img.height);
-  //       };
-  //       img.src = e.target?.result as string;
-  //     };
-  //     reader.readAsDataURL(event.target.files[0]);
-  //   }
-  // };
 
   const handleMouseDown = (
     event: React.MouseEvent<HTMLCanvasElement, MouseEvent>
@@ -150,19 +119,11 @@ const DrawingBoard: React.FC = () => {
     }
   };
 
-  const handleCoords = () => {
-    //* Resmi canvas üzerinde doğru konuma yerleştirir
-    if (!canvasRef.current) return;
-    const canvasWidth: number = canvasRef.current?.width / 2;
-    const canvasHeight: number = canvasRef.current?.height / 2;
-
-    setOffsetX(canvasWidth + 40 - width / 2);
-    setOffsetY(canvasHeight + 50 - height - 34);
-  };
-
   useEffect(() => {
     const canvas = canvasRef.current;
-
+    if (!canvasRef.current) return;
+    const canvasWidth: number = canvasRef.current?.width;
+    const canvasHeight: number = canvasRef.current?.height;
     if (canvas && defaultImgSrc) {
       const ctx = canvas.getContext("2d");
       if (ctx) {
@@ -183,8 +144,12 @@ const DrawingBoard: React.FC = () => {
               ctx.drawImage(img, offsetX, offsetY, width, height);
             };
             img.src = imgSrc;
+
+            //* Total Point
+            const xTotalPoint = canvasWidth * 0.3383334; // 203
+            const yTotalPoint = canvasHeight * 0.15; // 90
             writeText(
-              { text: totalPoint, x: 203, y: 90 },
+              { text: totalPoint, x: xTotalPoint, y: yTotalPoint },
               {
                 fontSize: 80,
                 color: "#fbffb2",
@@ -192,8 +157,11 @@ const DrawingBoard: React.FC = () => {
                 textBaseline: "top",
               }
             );
+            //* Position
+            const xPosition = canvasWidth * 0.33334; // 200
+            const yPosition = canvasHeight * 0.25834; // 155
             writeText(
-              { text: position, x: 200, y: 155 },
+              { text: position, x: xPosition, y: yPosition },
               {
                 fontSize: 40,
                 color: "#fbffb2",
@@ -201,8 +169,11 @@ const DrawingBoard: React.FC = () => {
                 textBaseline: "top",
               }
             );
+            //* Position
+            const xName = canvasWidth * 0.5; // 300
+            const yName = canvasHeight * 0.55; // 330
             writeText(
-              { text: name, x: 300, y: 330 },
+              { text: name, x: xName, y: yName },
               {
                 fontSize: 60,
                 color: "#fbffb2",
@@ -211,8 +182,10 @@ const DrawingBoard: React.FC = () => {
               }
             );
             //* PAC
+            const xPac = canvasWidth * 0.26667; // 160
+            const yPac = canvasHeight * 0.68334; // 410
             writeText(
-              { text: pac, x: 160, y: 410 },
+              { text: pac, x: xPac, y: yPac },
               {
                 fontSize: 40,
                 color: "#fbffb2",
@@ -222,8 +195,10 @@ const DrawingBoard: React.FC = () => {
               "PAC"
             );
             //* SHO
+            const xSho = canvasWidth * 0.26667; // 160
+            const ySho = canvasHeight * 0.741668; // 445
             writeText(
-              { text: sho, x: 160, y: 445 },
+              { text: sho, x: xSho, y: ySho },
               {
                 fontSize: 40,
                 color: "#fbffb2",
@@ -233,8 +208,10 @@ const DrawingBoard: React.FC = () => {
               "SHO"
             );
             //* PAS
+            const xPas = canvasWidth * 0.26667; // 160
+            const yPas = canvasHeight * 0.8; // 480
             writeText(
-              { text: pas, x: 160, y: 480 },
+              { text: pas, x: xPas, y: yPas },
               {
                 fontSize: 40,
                 color: "#fbffb2",
@@ -244,8 +221,10 @@ const DrawingBoard: React.FC = () => {
               "PAS"
             );
             //* DRI
+            const xDri = canvasWidth * 0.583334; // 350
+            const yDri = canvasHeight * 0.68334; // 410
             writeText(
-              { text: dri, x: 350, y: 410 },
+              { text: dri, x: xDri, y: yDri },
               {
                 fontSize: 40,
                 color: "#fbffb2",
@@ -255,8 +234,10 @@ const DrawingBoard: React.FC = () => {
               "DRI"
             );
             //* DEF
+            const xDef = canvasWidth * 0.583334; // 350
+            const yDef = canvasHeight * 0.741668; // 445
             writeText(
-              { text: def, x: 350, y: 445 },
+              { text: def, x: xDef, y: yDef },
               {
                 fontSize: 40,
                 color: "#fbffb2",
@@ -266,8 +247,10 @@ const DrawingBoard: React.FC = () => {
               "DEF"
             );
             //* PHY
+            const xPhy = canvasWidth * 0.583334; // 350
+            const yPhy = canvasHeight * 0.8; // 480
             writeText(
-              { text: phy, x: 350, y: 480 },
+              { text: phy, x: xPhy, y: yPhy },
               {
                 fontSize: 40,
                 color: "#fbffb2",
@@ -280,14 +263,32 @@ const DrawingBoard: React.FC = () => {
           if (flag) {
             let flagImage = new Image();
             flagImage.onload = () => {
-              ctx.drawImage(flagImage, 170, 200, 60, 45);
+              const xPosition = canvasWidth * 0.284; // 170
+              const yPosition = canvasHeight * 0.333; // 200
+
+              ctx.drawImage(
+                flagImage,
+                xPosition,
+                yPosition,
+                canvasWidth / 10,
+                canvasHeight / 13.335
+              );
             };
             flagImage.src = flag;
           }
           if (team) {
+            const xPosition = canvasWidth * 0.29165; // 175
+            const yPosition = canvasHeight * 0.425; // 255
+
             let teamImage = new Image();
             teamImage.onload = () => {
-              ctx.drawImage(teamImage, 175, 255, 55, 55);
+              ctx.drawImage(
+                teamImage,
+                xPosition,
+                yPosition,
+                canvasWidth / 11,
+                canvasHeight / 11
+              );
             };
             teamImage.src = team;
           }
@@ -333,10 +334,26 @@ const DrawingBoard: React.FC = () => {
     ctx.stroke();
   };
 
+  const handleCoords = () => {
+    //* Resmi canvas üzerinde doğru konuma yerleştirir
+    if (!canvasRef.current) return;
+    const canvasWidth: number = canvasRef.current?.width / 2;
+    const canvasHeight: number = canvasRef.current?.height / 2;
+
+    setOffsetX(canvasWidth + 40 - width / 2);
+    setOffsetY(canvasHeight + 50 - height - 34);
+  };
+
+  const handleClear = () => {
+    //* Canvası Temizler
+    dispatch(clearState());
+    console.log(result);
+  };
+
   return (
-    <div className='relative'>
+    <div className='relative '>
       <canvas
-        className='w-full p-10 shadow-[inset_0_0_20px_2px_rgba(0,0,0,0.1)]'
+        className='w-full p-10 rounded-t-lg shadow-[inset_0_0_20px_2px_rgba(0,0,0,0.1)]'
         ref={canvasRef}
         width={600}
         height={600}
@@ -352,11 +369,20 @@ const DrawingBoard: React.FC = () => {
       />
       <div className='button-list flex flex-col absolute top-2 right-2'>
         <Button
-          className='bg-blue-500 flex items-center justify-center rounded-md w-8 h-8 font-din'
+          className='bg-blue-500 flex items-center justify-center rounded-md w-8 max-w-[32px] h-8 font-din hover:scale-[1.05]'
           onClick={handleCoords}
           iconSize={20}
-          tooltip='Position the Image'
+          tooltip='Position The Image'
           iconLeft='vaadin:absolute-position'
+        />
+      </div>
+      <div className='button-list flex flex-col absolute bottom-12 right-2'>
+        <Button
+          className='bg-blue-500 flex items-center justify-center rounded-md w-8 max-w-[32px] h-8 font-din mt-4 hover:scale-[1.05]'
+          onClick={handleClear}
+          iconSize={20}
+          tooltip='Clear Canvas'
+          iconLeft='material-symbols-light:mop'
         />
       </div>
     </div>

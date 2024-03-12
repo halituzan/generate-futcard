@@ -52,10 +52,25 @@ const imageSlice = createSlice({
       const { key, data }: any = action.payload;
       state[key] = data;
     },
+    clearState: (state: any) => {
+      state.image = "";
+      state.flag = null;
+      state.team = null;
+      state.totalPoint = "";
+      state.name = "";
+      state.position = "";
+      state.pac = "";
+      state.sho = "";
+      state.pas = "";
+      state.dri = "";
+      state.def = "";
+      state.phy = "";
+      state.defaultImgSrc = "1";
+    },
   },
 });
 
-export const { uploadImage, uploadFlag, uploadTeam, uploadValues } =
+export const { uploadImage, uploadFlag, uploadTeam, uploadValues, clearState } =
   imageSlice.actions;
 
 export const selectImage = (state: { image: ValueProps }) => state.image;

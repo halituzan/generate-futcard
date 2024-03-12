@@ -63,18 +63,18 @@ const Generate = () => {
 
   return (
     <Main>
-      <div className='flex items-start flex-1'>
-        <div className='card-area rounded-md w-1/2 bg-slate-light'>
+      <div className='flex flex-col lg:flex-row items-start flex-1'>
+        <div className='card-area rounded-md w-full lg:w-1/2  bg-slate-light'>
           <DrawingBoard />
         </div>
-        <div className='upload-area flex-1 w-1/2 pl-4 flex flex-col'>
+        <div className='upload-area flex-1 w-full lg:w-1/2 pl-0 lg:pl-4 mt-5 lg:mt-0  flex flex-col'>
           <div className='flex w-full justify-between'>
             <Button
               onClick={upload}
               text='Upload'
               iconLeft='solar:gallery-send-bold-duotone'
               color='bg-blue-500'
-              className='w-full rounded-b-none'
+              className='w-full rounded-b-none font-din '
             />
             <input
               type='file'
@@ -95,7 +95,7 @@ const Generate = () => {
                 fileList.map(
                   (item: { id: string; title: string; image: string }) => {
                     return (
-                      <div key={item.id} className='p-2 w-1/4 h-32 relative'>
+                      <div key={item.id} className='p-2 w-32 h-32 relative'>
                         <img
                           className={`w-full h-full object-cover hover:scale-[1.05] transition-all hover:shadow-sm rounded-md cursor-pointer
                       ${

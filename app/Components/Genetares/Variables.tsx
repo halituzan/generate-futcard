@@ -90,27 +90,27 @@ const Variables = ({ selectedImage }: Props) => {
   return (
     <div className='flex flex-col w-full flex-1 h-auto'>
       <div className='px-2 py-4 border-t w-full flex flex-col'>
-        <div className='flex items-center justify-between'>
+        <div className='flex flex-col lg:flex-row items-center justify-between'>
           <TextInput
             setter={setName}
             label='Name'
             set={name}
             placeholder='Name'
-            className='w-[31%]'
+            w='w-full lg:w-[32%]'
           />
           <TextInput
             setter={setPosition}
             label='Position'
             set={position}
             placeholder='Position'
-            className='w-[31%]'
+            w='w-full lg:w-[32%]'
           />
           <TextInput
             setter={setTotalPoint}
-            label='Total Point (1 - 99)'
+            label='Total Point'
             set={totalPoint}
-            placeholder='Total Point'
-            className='w-[31%]'
+            placeholder='Total Point (1 - 99)'
+            w='w-full lg:w-[32%]'
             type='number'
             min='1'
             max='99'
@@ -118,7 +118,7 @@ const Variables = ({ selectedImage }: Props) => {
         </div>
 
         <div className='flex w-full justify-between'>
-          <div className='w-[48%] flex flex-col'>
+          <div className='w-full flex justify-between flex-col lg:flex-row flex-wrap'>
             <TextInput
               setter={setPac}
               set={pac}
@@ -126,6 +126,7 @@ const Variables = ({ selectedImage }: Props) => {
               type='number'
               min='1'
               max='99'
+              w='w-full lg:w-[48%]'
             />
             <TextInput
               setter={setSho}
@@ -134,6 +135,7 @@ const Variables = ({ selectedImage }: Props) => {
               type='number'
               min='1'
               max='99'
+              w='w-full lg:w-[48%]'
             />
             <TextInput
               setter={setPas}
@@ -142,9 +144,9 @@ const Variables = ({ selectedImage }: Props) => {
               type='number'
               min='1'
               max='99'
+              w='w-full lg:w-[48%]'
             />
-          </div>
-          <div className='w-[48%] flex flex-col items-end'>
+
             <TextInput
               setter={setDri}
               set={dri}
@@ -152,6 +154,7 @@ const Variables = ({ selectedImage }: Props) => {
               type='number'
               min='1'
               max='99'
+              w='w-full lg:w-[48%]'
             />
             <TextInput
               setter={setDef}
@@ -160,6 +163,7 @@ const Variables = ({ selectedImage }: Props) => {
               type='number'
               min='1'
               max='99'
+              w='w-full lg:w-[48%]'
             />
             <TextInput
               setter={setPhy}
@@ -168,6 +172,7 @@ const Variables = ({ selectedImage }: Props) => {
               type='number'
               min='1'
               max='99'
+              w='w-full lg:w-[48%]'
             />
           </div>
         </div>
@@ -203,7 +208,7 @@ const Variables = ({ selectedImage }: Props) => {
               </select>
             </div>
             <Button
-              text='Add Team Logo'
+              text='Team'
               iconLeft='line-md:uploading-loop'
               color='bg-blue-500'
               className='w-full h-10'
