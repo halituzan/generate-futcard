@@ -43,6 +43,12 @@ const cardList = [
 
 const DrawingBoard: React.FC = () => {
   const [openCards, setOpenCards] = useState(false);
+  const [zoom, setZoom] = useState(1);
+  const clamp = (num: number, min: number, max: number) =>
+    Math.min(Math.max(num, min), max);
+  const SCROLL_SENSITIVITY = 0.0005;
+  const MAX_ZOOM = 10;
+  const MIN_ZOOM = 0.3;
   const dropdownRef = useRef(null);
   const dispatch = useDispatch();
   const result = useSelector((state: { image: any }) => state.image);
@@ -80,7 +86,6 @@ const DrawingBoard: React.FC = () => {
     color,
     columnColor,
   } = result;
-  console.log(result);
 
   const imgSrc = result.image;
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -161,6 +166,14 @@ const DrawingBoard: React.FC = () => {
     setDragging(false);
     setResizing(false);
   };
+  const handleWheel = (event: any) => {
+    const { deltaY } = event;
+    if (!dragging) {
+      setZoom((zoom) =>
+        clamp(zoom + deltaY * SCROLL_SENSITIVITY * -1, MIN_ZOOM, MAX_ZOOM)
+      );
+    }
+  };
 
   const handleSaveImage = () => {
     const canvas = canvasRef.current;
@@ -187,7 +200,8 @@ const DrawingBoard: React.FC = () => {
     const canvasHeight: number = canvas?.height;
     if (canvas && defaultImgSrc) {
       const ctx = canvas.getContext("2d");
-
+      //* Zoom eventi
+      // ctx?.scale(zoom, zoom);
       if (ctx) {
         // Varsayılan görüntüyü yalnızca bileşen bağlandığında çizer
         const defaultImg = new Image();
@@ -258,8 +272,15 @@ const DrawingBoard: React.FC = () => {
 
         defaultImg.src = "/images/" + defaultImgSrc + ".png";
       }
+
+      if (!canvas) return;
+      canvas.addEventListener("wheel", handleWheel);
+      return () => {
+        canvas.removeEventListener("wheel", handleWheel);
+      };
     }
   }, [
+    handleWheel,
     defaultImgSrc,
     result,
     imgSrc,
@@ -298,6 +319,7 @@ const DrawingBoard: React.FC = () => {
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
+        onWheel={handleWheel}
       />
       <Button
         className='bg-blue-500 w-full rounded-t-none text-xl font-din'

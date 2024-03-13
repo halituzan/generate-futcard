@@ -11,6 +11,7 @@ import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "../Patterns/Buttons";
 import TextInput from "../Patterns/TextInput";
+import { positions } from "@/app/default";
 type Props = {
   selectedImage: any;
 };
@@ -19,16 +20,14 @@ const Variables = ({ selectedImage }: Props) => {
   const uploadInput = useRef<HTMLInputElement>(null);
   const dispatch = useDispatch();
   const result = useSelector((state: { image: any }) => state.image);
-
   const [loading, setLoading] = useState(false);
   const [countryList, setCountryList] = useState([]);
-  const [selectedCountry, setSelectedCountry] = useState("");
+  const [selectedCountry, setSelectedCountry] = useState();
   const [selectTeam, setSelectTeam] = useState(null);
   const [selectTeamBase64, setSelectTeamBase64] = useState("");
-
   const [name, setName] = useState("");
   const [totalPoint, setTotalPoint] = useState("");
-  const [position, setPosition] = useState("");
+  const [position, setPosition] = useState("CAM");
   const [pac, setPac] = useState("");
   const [sho, setSho] = useState("");
   const [pas, setPas] = useState("");
@@ -40,6 +39,7 @@ const Variables = ({ selectedImage }: Props) => {
     try {
       const { data } = await Network.getData("api/general/get-countries");
       setCountryList(data);
+      setSelectedCountry(`data:image/png;base64,${data[0]?.flag}`);
     } catch (error) {
       console.log(error);
     }
@@ -98,18 +98,32 @@ const Variables = ({ selectedImage }: Props) => {
             placeholder='Name'
             w='w-full lg:w-[32%]'
           />
-          <TextInput
-            setter={setPosition}
-            label='Position'
-            set={position}
-            placeholder='Position'
-            w='w-full lg:w-[32%]'
-          />
+          <div className='flex flex-col  w-full lg:w-[32%]'>
+            <label htmlFor={`position`} className='text-sm font-normal'>
+              Position
+            </label>
+            <select
+              id='position'
+              onChange={(e) => {
+                setPosition(e.target.value);
+              }}
+              className='peer border border-slate outline-none text-slate-dark font-600 text-[12px] w-full focus:border-slate-dark px-3 py-2 rounded-[7px] '
+            >
+              {positions.map((item, index) => {
+                return (
+                  <option key={item} value={item}>
+                    {item}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
+
           <TextInput
             setter={setTotalPoint}
             label='Total Point'
             set={totalPoint}
-            placeholder='Total Point (1 - 99)'
+            placeholder='(1 - 99)'
             w='w-full lg:w-[32%]'
             type='number'
             min='1'
@@ -122,7 +136,8 @@ const Variables = ({ selectedImage }: Props) => {
             <TextInput
               setter={setPac}
               set={pac}
-              placeholder='PAC (1 - 99)'
+              placeholder='(1 - 99)'
+              insideLabel={position === "GK" ? "DIV" : "PAC"}
               type='number'
               min='1'
               max='99'
@@ -131,7 +146,8 @@ const Variables = ({ selectedImage }: Props) => {
             <TextInput
               setter={setSho}
               set={sho}
-              placeholder='SHO (1 - 99)'
+              placeholder='(1 - 99)'
+              insideLabel={position === "GK" ? "HAN" : "SHO"}
               type='number'
               min='1'
               max='99'
@@ -140,7 +156,8 @@ const Variables = ({ selectedImage }: Props) => {
             <TextInput
               setter={setPas}
               set={pas}
-              placeholder='PAS (1 - 99)'
+              placeholder='(1 - 99)'
+              insideLabel={position === "GK" ? "KIC" : "PAS"}
               type='number'
               min='1'
               max='99'
@@ -150,7 +167,8 @@ const Variables = ({ selectedImage }: Props) => {
             <TextInput
               setter={setDri}
               set={dri}
-              placeholder='DRI (1 - 99)'
+              placeholder='(1 - 99)'
+              insideLabel={position === "GK" ? "REF" : "DRI"}
               type='number'
               min='1'
               max='99'
@@ -159,7 +177,8 @@ const Variables = ({ selectedImage }: Props) => {
             <TextInput
               setter={setDef}
               set={def}
-              placeholder='DEF (1 - 99)'
+              placeholder='(1 - 99)'
+              insideLabel={position === "GK" ? "SPE" : "DEF"}
               type='number'
               min='1'
               max='99'
@@ -168,7 +187,8 @@ const Variables = ({ selectedImage }: Props) => {
             <TextInput
               setter={setPhy}
               set={phy}
-              placeholder='PHY (1 - 99)'
+              placeholder='(1 - 99)'
+              insideLabel={position === "GK" ? "POS" : "PHY"}
               type='number'
               min='1'
               max='99'
@@ -177,8 +197,8 @@ const Variables = ({ selectedImage }: Props) => {
           </div>
         </div>
         <div className='flex items-center w-full'>
-          <div className='w-full'>
-            <div className='flex items-center my-2'>
+          <div className='w-full pr-2'>
+            <div className='flex items-center my-2 '>
               <div className='w-12 h-9 flex justify-center items-center bg-slate/20 rounded-l-[7px]  '>
                 <img
                   src={

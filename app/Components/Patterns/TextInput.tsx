@@ -13,6 +13,7 @@ export interface InputProps {
   direction?: string;
   items?: string;
   w?: string;
+  insideLabel?: string;
   subLabel?: string | React.ReactNode;
 }
 
@@ -29,6 +30,7 @@ const TextInput: React.FC<InputProps> = ({
   direction = "flex-col",
   items = "items-start",
   w = "w-full",
+  insideLabel,
 }) => {
   const [focus, setFocus] = React.useState(false);
   const [inputType, setInputType] = React.useState(type);
@@ -40,7 +42,7 @@ const TextInput: React.FC<InputProps> = ({
           {label}
         </label>
       )}
-      <div className='relative w-full'>
+      <div className='relative w-full flex items-center'>
         {type === "password" ? (
           <input
             type={inputType}
@@ -86,6 +88,7 @@ const TextInput: React.FC<InputProps> = ({
             )}
           </span>
         )}
+        {insideLabel && <span className="absolute right-3 font-din">{insideLabel}</span>}
       </div>
 
       {subLabel && subLabel}
@@ -107,5 +110,6 @@ export declare interface InputProps {
   items?: string;
   min?: string;
   w?: string;
+  insideLabel?: string;
   max?: string;
 }

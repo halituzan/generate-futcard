@@ -88,7 +88,7 @@ export const valuesGenerate = (
       textAlign: "left",
       textBaseline: "left",
     },
-    "PAC"
+    position === "GK" ? "DIV" : "PAC"
   );
   //* SHO
   const xSho = canvasWidth * 0.26667; // 160
@@ -102,7 +102,7 @@ export const valuesGenerate = (
       textAlign: "left",
       textBaseline: "left",
     },
-    "SHO"
+    position === "GK" ? "HAN" : "SHO"
   );
   //* PAS
   const xPas = canvasWidth * 0.26667; // 160
@@ -116,7 +116,7 @@ export const valuesGenerate = (
       textAlign: "left",
       textBaseline: "left",
     },
-    "PAS"
+    position === "GK" ? "KIC" : "PAS"
   );
   //* DRI
   const xDri = canvasWidth * 0.583334; // 350
@@ -130,7 +130,7 @@ export const valuesGenerate = (
       textAlign: "left",
       textBaseline: "left",
     },
-    "DRI"
+    position === "GK" ? "REF" : "DRI"
   );
   //* DEF
   const xDef = canvasWidth * 0.583334; // 350
@@ -144,7 +144,7 @@ export const valuesGenerate = (
       textAlign: "left",
       textBaseline: "left",
     },
-    "DEF"
+    position === "GK" ? "SPE" : "DEF"
   );
   //* PHY
   const xPhy = canvasWidth * 0.583334; // 350
@@ -158,6 +158,6 @@ export const valuesGenerate = (
       textAlign: "left",
       textBaseline: "left",
     },
-    "PHY"
+    position === "GK" ? "POS" : "PHY"
   );
 };
