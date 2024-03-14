@@ -38,7 +38,9 @@ const config: Config = {
         din:"DIN-Condensed-Bold"
       },
       animation: {
-        flip: 'flip 1s cubic-bezier(0, 0, 0.2, 1) infinite'
+        flip: 'flip 1s cubic-bezier(0, 0, 0.2, 1) infinite',
+        'slide-up': 'slide-up 10s linear infinite',
+        'slide-down': 'slide-down 10s linear infinite',
       },
       keyframes: {
         flip: {

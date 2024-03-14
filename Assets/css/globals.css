@@ -50,3 +50,66 @@ input[type=number] {
     -moz-appearance: textfield;
     /* Firefox */
 }
+
+@keyframes slide-up {
+    0% {
+        transform: translateY(100%);
+    }
+
+    100% {
+        transform: translateY(-100%);
+    }
+}
+
+@keyframes slide-down {
+    0% {
+        transform: translateY(-100%);
+    }
+
+    100% {
+        transform: translateY(100%);
+    }
+}
+
+.animate-slide-up {
+    animation: slide-up linear infinite;
+    filter: drop-shadow(0px 0px 4px #57575a);
+}
+
+.animate-slide-down {
+    animation: slide-down linear infinite;
+    filter: drop-shadow(0px 0px 4px #57575a);
+}
+
+.animate-slide-up, .animate-slide-down {
+    animation-duration: 20s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    filter: drop-shadow(0px 0px 4px #57575a);
+}
+
+.login-image-carousel img {
+    margin-bottom: 15px;
+}
+
+/* .left-corner {
+    width: 0;
+    height: 0;
+    border-left: 0px solid transparent;
+    border-right: 220px solid transparent;
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-top: 130px solid #1d4ed8;
+}
+
+.right-corner {
+    width: 0;
+    height: 0;
+    border-left: 220px solid transparent;
+    border-right: 0px solid transparent;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    border-bottom: 130px solid #1d4ed8;
+} */

@@ -33,7 +33,7 @@ const Button: React.FC<ButtonProps> = ({
   onClick,
 }) => {
   return (
-    <div className={`flex flex-col w-full font-din ${mr && "mr-" + mr}`}>
+    <div className={`flex w-full font-din ${mr && "mr-" + mr}`}>
       <button
         className={`
         ${iconLeft || iconRight ? "justify-center" : "justify-center"}

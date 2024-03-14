@@ -36,9 +36,9 @@ const TextInput: React.FC<InputProps> = ({
   const [inputType, setInputType] = React.useState(type);
 
   return (
-    <div className={`flex ${direction} ${items} ${w} ${className}`}>
+    <div className={`flex font-din ${direction} ${items} ${w} ${className}`}>
       {label && (
-        <label htmlFor={`${label}-input`} className='text-sm font-normal'>
+        <label htmlFor={`${label}-input`} className='text-sm font-normal  font-din'>
           {label}
         </label>
       )}
@@ -49,7 +49,7 @@ const TextInput: React.FC<InputProps> = ({
             id={`${label}-input`}
             value={set}
             placeholder={placeholder}
-            className='border border-slate outline-none text-slate-dark font-600 text-[12px] focus:border-slate-dark px-3 py-2 rounded-[7px] my-1 w-full'
+            className='border border-slate outline-none  font-din text-slate-dark font-600 text-[12px] focus:border-slate-dark px-3 py-2 rounded-[7px] my-1 w-full'
             onFocus={() => setFocus(true)}
             onBlur={() => setFocus(false)}
             onChange={(e) => setter(e.target.value)}

@@ -2,11 +2,22 @@ import React, { useState } from "react";
 import { Icon } from "@iconify/react";
 import navigation from "@/Navigation/Navigation";
 import VerticalMenuItems from "@/Navigation/VerticalMenu/VerticalMenuItems";
+import Button from "./Patterns/Buttons";
+import Network from "@/helpers/Network";
+import { useRouter } from "next/router";
 type Props = {};
 
 const Sidebar = (props: Props) => {
+  const router = useRouter();
   const [openSidebar, setOpenSidebar] = useState(true);
   const [openAllSidebar, setOpenAllSidebar] = useState(true);
+
+  const logoutHandler = async () => {
+    try {
+      const res = await Network.getData("api/auth/logout");
+      router.push("/login");
+    } catch (error) {}
+  };
 
   return (
     <div
@@ -39,12 +50,27 @@ const Sidebar = (props: Props) => {
           )}
         </div>
       </div>
-      <div className='flex flex-col items-start'>
-        {navigation.map((item) => {
-          return (
-            <VerticalMenuItems key={item.path} item={item} open={openSidebar} />
-          );
-        })}
+      <div className='flex flex-1 flex-col items-start justify-between'>
+        <div className='w-full flex-1'>
+          {navigation.map((item) => {
+            return (
+              <VerticalMenuItems
+                key={item.path}
+                item={item}
+                open={openSidebar}
+              />
+            );
+          })}
+        </div>
+        <div className='p-4 w-full flex justify-center items-center'>
+          <Button
+            onClick={logoutHandler}
+            color='bg-blue-500'
+            text={openSidebar ? "Log out" : ""}
+            className='w-full'
+            iconRight='solar:logout-bold-duotone'
+          />
+        </div>
       </div>
     </div>
   );

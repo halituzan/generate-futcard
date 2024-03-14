@@ -1,7 +1,7 @@
 const navigation = [
   {
     id: "1",
-    label: "Ana Sayfa",
+    label: "Home",
     path: "/",
     icon: "ion:home",
   },
