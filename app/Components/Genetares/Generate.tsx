@@ -13,6 +13,7 @@ import Variables from "./Variables";
 
 const Generate = () => {
   const uploadInput = useRef<HTMLInputElement>(null);
+  const [upscaleCanvas, setUpscaleCanvas] = useState(false);
 
   const [selectedImage, setSelectedImage] = useState({
     id: "",
@@ -65,7 +66,10 @@ const Generate = () => {
     <Main>
       <div className='flex flex-col lg:flex-row items-start flex-1'>
         <div className='card-area rounded-md w-full lg:w-1/2  bg-slate-light'>
-          <DrawingBoard />
+          <DrawingBoard
+            upscaleCanvas={upscaleCanvas}
+            setUpscaleCanvas={setUpscaleCanvas}
+          />
         </div>
         <div className='upload-area flex-1 w-full lg:w-1/2 pl-0 lg:pl-4 mt-5 lg:mt-0  flex flex-col'>
           <div className='flex w-full justify-between'>
@@ -139,6 +143,24 @@ const Generate = () => {
           </div>
         </div>
       </div>
+      {upscaleCanvas && (
+        <div className='w-screen h-screen fixed top-0 left-0 bg-white flex flex-col'>
+          <div className='h-10 flex justify-end items-center px-2 border-b border-b-blue-500'>
+            <Icon
+              icon='fa6-solid:rectangle-xmark'
+              fontSize={"1.4rem"}
+              className='text-blue-500 cursor-pointer'
+              onClick={() => setUpscaleCanvas(false)}
+            />
+          </div>
+          <div className='flex-1'>
+            <DrawingBoard
+              upscaleCanvas={upscaleCanvas}
+              setUpscaleCanvas={setUpscaleCanvas}
+            />
+          </div>
+        </div>
+      )}
     </Main>
   );
 };

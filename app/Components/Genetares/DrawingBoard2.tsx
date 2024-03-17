@@ -41,13 +41,7 @@ const cardList = [
   },
 ];
 
-const DrawingBoard = ({
-  upscaleCanvas,
-  setUpscaleCanvas,
-}: {
-  upscaleCanvas: any;
-  setUpscaleCanvas: any;
-}) => {
+const DrawingBoard2 = () => {
   const [openCards, setOpenCards] = useState(false);
   const [zoom, setZoom] = useState(1);
   const clamp = (num: number, min: number, max: number) =>
@@ -181,22 +175,6 @@ const DrawingBoard = ({
     }
   };
 
-  const handleSaveImage = () => {
-    const canvas = canvasRef.current;
-
-    if (canvas) {
-      // Create a data URL from the canvas
-      const dataURL = canvas.toDataURL("image/png");
-
-      // Create a download link
-      const link = document.createElement("a");
-      link.href = dataURL;
-      link.download = uuidv4();
-
-      // Trigger a click on the link to start the download
-      link.click();
-    }
-  };
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -299,22 +277,6 @@ const DrawingBoard = ({
     svgData,
   ]);
 
-  const handleCoords = () => {
-    //* Resmi canvas üzerinde doğru konuma yerleştirir
-    if (!canvasRef.current) return;
-    const canvasWidth: number = canvasRef.current?.width / 2;
-    const canvasHeight: number = canvasRef.current?.height / 2;
-
-    setOffsetX(canvasWidth + 40 - width / 2);
-    setOffsetY(canvasHeight + 50 - height - 33);
-  };
-
-  const handleClear = () => {
-    //* Canvası Temizler
-    dispatch(clearState());
-    console.log(result);
-  };
-
   return (
     <div className='relative '>
       <canvas
@@ -327,60 +289,8 @@ const DrawingBoard = ({
         onMouseUp={handleMouseUp}
         onWheel={handleWheel}
       />
-      <Button
-        className='bg-blue-500 w-full rounded-t-none text-xl font-din'
-        onClick={handleSaveImage}
-        iconLeft='ant-design:save-twotone'
-        text='Save'
-      />
-      <div className='button-list flex flex-col absolute top-2 right-2'>
-        <Button
-          className='bg-blue-500 flex items-center justify-center rounded-md w-8 max-w-[32px] h-8 font-din hover:scale-[1.05]'
-          onClick={handleCoords}
-          iconSize={20}
-          tooltip='Position The Image'
-          iconLeft='vaadin:absolute-position'
-        />
-      </div>
-
-      <div className='button-list flex flex-col absolute top-2 left-2'>
-        <div className='relative'>
-          <Button
-            className='bg-blue-500 flex items-center justify-center rounded-md w-8 p-1 max-w-[32px] h-8 font-din  hover:scale-[1.05]'
-            onClick={() => {
-              setOpenCards(true);
-            }}
-            iconSize={20}
-            tooltip='Clear Canvas'
-            iconLeft='formkit:select'
-          />
-          {openCards && (
-            <CardDopdown setOpenCards={setOpenCards} cardList={cardList} />
-          )}
-        </div>
-      </div>
-
-      <div className='button-list flex flex-col absolute bottom-12 right-2'>
-        <Button
-          className='bg-blue-500 flex items-center justify-center rounded-md w-8 max-w-[32px] h-8 font-din mt-4 hover:scale-[1.05]'
-          onClick={handleClear}
-          iconSize={20}
-          tooltip='Clear Canvas'
-          iconLeft='material-symbols-light:mop'
-        />
-      </div>
-
-      <div className='button-list flex flex-col absolute bottom-12 left-2'>
-        <Button
-          className='bg-blue-500 flex items-center justify-center rounded-md w-8 max-w-[32px] h-8 font-din mt-4 hover:scale-[1.05]'
-          onClick={() => setUpscaleCanvas(true)}
-          iconSize={20}
-          tooltip='Upscale'
-          iconLeft='tdesign:upscale'
-        />
-      </div>
     </div>
   );
 };
 
-export default DrawingBoard;
+export default DrawingBoard2;
