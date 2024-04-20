@@ -16,6 +16,8 @@ type Props = {
   selectedImage: any;
 };
 
+import { svgToBase64 } from "@/helpers/svgToBase64";
+
 const Variables = ({ selectedImage }: Props) => {
   const uploadInput = useRef<HTMLInputElement>(null);
   const dispatch = useDispatch();
@@ -38,8 +40,44 @@ const Variables = ({ selectedImage }: Props) => {
   const countryListHandler = async () => {
     try {
       const { data } = await Network.getData("api/general/get-countries");
+
       setCountryList(data);
-      setSelectedCountry(`data:image/png;base64,${data[0]?.flag}`);
+      setSelectedCountry(data[0]?.flag);
+
+      // const transformedData: any = [];
+      // data.forEach((item: any) => {
+      //   svgToBase64(item.flags.svg, (base64data: any) => {
+      //     const newItem = {
+      //       ...item,
+      //       flag: base64data,
+      //     };
+      //     transformedData.push(newItem);
+
+      //     // Tüm öğeler dönüştürüldüğünde JSON dosyasını indir
+      //     if (transformedData.length === data.length) {
+      //       downloadJSON(transformedData);
+      //     }
+      //   });
+      //   // JSON dosyasını indirme fonksiyonu
+      //   function downloadJSON(data: any) {
+      //     const jsonDataStr = JSON.stringify(data, null, 2);
+      //     const blob = new Blob([jsonDataStr], { type: "application/json" });
+      //     const url = URL.createObjectURL(blob);
+
+      //     const link = document.createElement("a");
+      //     link.href = url;
+      //     link.download = "transformed_data.json";
+      //     document.body.appendChild(link);
+      //     link.click();
+      //     document.body.removeChild(link);
+      //     URL.revokeObjectURL(url);
+      //   }
+      // });
+
+      // svgToBase64(data[0].flag, (base64data) => {
+      //   console.log("Base64 verisi:", base64data);
+      //   // Base64 verisini kullanmak için burada bir işlem yapabilirsiniz
+      // });
     } catch (error) {
       console.log(error);
     }
@@ -86,6 +124,7 @@ const Variables = ({ selectedImage }: Props) => {
   useEffect(() => {
     countryListHandler();
   }, []);
+  console.log(countryList);
 
   return (
     <div className='flex flex-col w-full flex-1 h-auto'>
@@ -201,28 +240,22 @@ const Variables = ({ selectedImage }: Props) => {
             <div className='flex items-center my-2 '>
               <div className='w-12 h-9 flex justify-center items-center bg-slate/20 rounded-l-[7px]  '>
                 <img
-                  src={
-                    selectedCountry
-                      ? selectedCountry
-                      : `data:image/png;base64,${countryList[0]?.flag}`
-                  }
+                  src={selectedCountry ? selectedCountry : countryList[0]?.flag}
                   className='h-full object-cover rounded-l-[7px]'
                 />
               </div>
               <select
                 onChange={(e) => {
                   setSelectedCountry(
-                    `data:image/png;base64,${
-                      countryList.find((env: any) => env.id == e.target.value)
-                        ?.flag
-                    }`
+                    countryList.find((env: any) => env._id == e.target.value)
+                      ?.flag
                   );
                 }}
                 className='peer border border-slate border-l-0 rounded-l-none outline-none text-slate-dark font-600 text-[12px] focus:border-slate-dark px-3 py-2 rounded-[7px]  w-full'
               >
                 {countryList.map(
                   (item: { name: string; id: number }, index) => {
-                    return <option value={item.id}>{item.name}</option>;
+                    return <option value={item._id}>{item.name}</option>;
                   }
                 )}
               </select>

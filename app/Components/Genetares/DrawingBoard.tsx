@@ -186,7 +186,7 @@ const DrawingBoard = ({
 
     if (canvas) {
       // Create a data URL from the canvas
-      const dataURL = canvas.toDataURL("image/png");
+      const dataURL = canvas?.toDataURL("image/png");
 
       // Create a download link
       const link = document.createElement("a");
