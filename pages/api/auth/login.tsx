@@ -13,7 +13,9 @@ const handler = async (req: any, res: any) => {
     // Check if user exists
     const user = await Users.findOne({ userName });
     if (!user) {
-      return res.status(400).json({ message: "Bu kullanıcı adı mevcut değil.", status: false });
+      return res
+        .status(400)
+        .json({ message: "Bu kullanıcı adı mevcut değil.", status: false });
     }
     console.log(user.isActive);
 
@@ -21,11 +23,15 @@ const handler = async (req: any, res: any) => {
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
-      return res.status(400).json({ message: "Email veya Şifreniz Yanlış", status: false });
+      return res
+        .status(400)
+        .json({ message: "Email veya Şifreniz Yanlış", status: false });
     }
     // Check if verify is correct
     if (!user.isActive) {
-        return res.status(400).json({ message: "Üyeliğiniz Onaylanmamıştır.", status: false });
+      return res
+        .status(400)
+        .json({ message: "Üyeliğiniz Onaylanmamıştır.", status: false });
     } else {
       // Create and sign JWT token
       const token = jwt.sign({ userId: user._id }, jwtSecret, {
@@ -44,6 +50,14 @@ const handler = async (req: any, res: any) => {
         })
       );
 
+      if (req.headers.platform === "mobile") {
+        res.status(200).json({
+          message: "Giriş Başarılı",
+          status: true,
+          token,
+        });
+        return;
+      }
       res.status(200).json({
         message: "Giriş Başarılı",
         status: true,
