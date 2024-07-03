@@ -180,7 +180,21 @@ const DrawingBoard = ({
         defaultImg.onload = () => {
           ctx.clearRect(0, 0, canvas.width, canvas.height);
           ctx.drawImage(defaultImg, 100, 0, canvas.width - 200, canvas.height);
-
+          valuesGenerate(
+            ctx,
+            canvasWidth,
+            canvasHeight,
+            totalPoint,
+            color,
+            name,
+            position,
+            pac,
+            pas,
+            def,
+            sho,
+            dri,
+            phy
+          );
           // Girilen görüntüyü hesaplanan boyutlarla çizer
           if (imgSrc) {
             const img = new Image();
@@ -188,22 +202,6 @@ const DrawingBoard = ({
               ctx.drawImage(img, offsetX, offsetY, width, height);
             };
             img.src = imgSrc;
-
-            valuesGenerate(
-              ctx,
-              canvasWidth,
-              canvasHeight,
-              totalPoint,
-              color,
-              name,
-              position,
-              pac,
-              pas,
-              def,
-              sho,
-              dri,
-              phy
-            );
           }
           if (flag) {
             let flagImage = new Image();
@@ -240,7 +238,6 @@ const DrawingBoard = ({
           // frame(ctx, canvas, svgData);
         };
         blueGold(ctx, canvas.width, canvas.height, color, columnColor);
-        console.log(defaultImg);
 
         defaultImg.src = "/images/" + defaultImgSrc + ".png";
       }

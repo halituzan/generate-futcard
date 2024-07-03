@@ -1,7 +1,6 @@
 import Main from "@/pages";
 import { useEffect, useRef, useState } from "react";
 import DrawingBoard from "./DrawingBoard";
-
 import Network from "@/helpers/Network";
 import { Icon } from "@iconify/react";
 import axios from "axios";
@@ -62,7 +61,7 @@ const Generate = () => {
   return (
     <Main>
       <div className='flex flex-col lg:flex-row items-start flex-1'>
-        <div className='card-area rounded-md w-full lg:w-1/2  bg-slate-light'>
+        <div className='card-area rounded-md w-full lg:w-1/2 bg-slate-light'>
           <DrawingBoard
             upscaleCanvas={upscaleCanvas}
             setUpscaleCanvas={setUpscaleCanvas}
