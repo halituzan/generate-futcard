@@ -1,14 +1,11 @@
 import Main from "@/pages";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import DrawingBoard from "./DrawingBoard";
 
 import Network from "@/helpers/Network";
-import axios from "axios";
 import { Icon } from "@iconify/react";
-import { useDispatch, useSelector } from "react-redux";
-import { selectImage, uploadImage } from "@/lib/features/image/imageSlice";
+import axios from "axios";
 import Button from "../Patterns/Buttons";
-import TextInput from "../Patterns/TextInput";
 import Variables from "./Variables";
 
 const Generate = () => {
@@ -87,6 +84,8 @@ const Generate = () => {
               ref={uploadInput}
               onChange={(e) => {
                 if (e.target.files) {
+                  console.log(e.target.files[0]);
+
                   uploadImageHandler(e.target.files[0]);
                 }
               }}

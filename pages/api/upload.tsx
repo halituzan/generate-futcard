@@ -12,6 +12,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const data = verifyUser(req.cookies.token);
 
   form.on("file", async (field: any, file: any) => {
+   console.log(file);
+   
     const buffer = fs.readFileSync(file.filepath);
     const blob = new Blob([buffer]);
 

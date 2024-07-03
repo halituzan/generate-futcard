@@ -49,7 +49,7 @@ const DrawingBoard2 = () => {
   const SCROLL_SENSITIVITY = 0.0005;
   const MAX_ZOOM = 10;
   const MIN_ZOOM = 0.3;
-  const dropdownRef = useRef(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const dispatch = useDispatch();
   const result = useSelector((state: { image: any }) => state.image);
 
@@ -175,7 +175,6 @@ const DrawingBoard2 = () => {
     }
   };
 
-
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -185,13 +184,13 @@ const DrawingBoard2 = () => {
     if (canvas && defaultImgSrc) {
       const ctx = canvas.getContext("2d");
       //* Zoom eventi
-      // ctx?.scale(zoom, zoom);
+       ctx?.scale(zoom, zoom);
       if (ctx) {
         // Varsayılan görüntüyü yalnızca bileşen bağlandığında çizer
         const defaultImg = new Image();
         defaultImg.onload = () => {
           ctx.clearRect(0, 0, canvas.width, canvas.height);
-          ctx.drawImage(defaultImg, 100, 0, canvas.width - 200, canvas.height);
+          ctx.drawImage(defaultImg, 0, 0, canvas.width - 150, canvas.height);
 
           blueGold(ctx, canvas.width, canvas.height, color, columnColor);
 
@@ -278,18 +277,14 @@ const DrawingBoard2 = () => {
   ]);
 
   return (
-    <div className='relative '>
-      <canvas
-        className='p-10 w-full rounded-t-lg shadow-[inset_0_0_20px_2px_rgba(0,0,0,0.1)]'
-        ref={canvasRef}
-        width={600}
-        height={600}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-        onWheel={handleWheel}
-      />
-    </div>
+    <canvas
+      className='p-10 w-full rounded-t-lg h-full shadow-[inset_0_0_20px_2px_rgba(0,0,0,0.1)]'
+      ref={canvasRef}
+      onMouseDown={handleMouseDown}
+      onMouseMove={handleMouseMove}
+      onMouseUp={handleMouseUp}
+      onWheel={handleWheel}
+    />
   );
 };
 

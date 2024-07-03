@@ -4,13 +4,20 @@ import { initializeApp } from "firebase/app";
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
-const firebaseConfig = {
+const firebaseConfig: {
+  apiKey: string;
+  authDomain: string;
+  projectId: string;
+  storageBucket: string;
+  messagingSenderId: string;
+  appId: string;
+} = {
   apiKey: "AIzaSyBq1BYDgsPqiP15_HYdExLDd1deNrFGeyA",
   authDomain: "generate-futcard.firebaseapp.com",
   projectId: "generate-futcard",
   storageBucket: "generate-futcard.appspot.com",
   messagingSenderId: "537971982486",
-  appId: "1:537971982486:web:9840d1e2b94b83f76842b7"
+  appId: "1:537971982486:web:9840d1e2b94b83f76842b7",
 };
 
 // Initialize Firebase

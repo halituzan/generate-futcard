@@ -8,38 +8,6 @@ import { blueGold } from "./Cards/BlueCard/blueGold";
 import { v4 as uuidv4 } from "uuid";
 import CardDopdown from "./CardDopdown";
 import { valuesGenerate } from "./Cards/BlueCard/values";
-const svgData = `<?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 28.3.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="katman_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 600 600" style="enable-background:new 0 0 600 600;" xml:space="preserve">
-<style type="text/css">
-	.st0{fill:#F5E380;}
-</style>
-<path class="st0" d="M300,513.6l-3.4-5.5c-1.7-2.7-10-9.2-47.3-22.7c-23.4-8.4-49.2-16.3-61.7-20.1l-0.3-0.1
-	c-4.1-1.3-7.1-2.2-8.6-2.7c-13.2-4.3-16.7-12.6-17.1-13.6l-0.3-0.7V133.6l3.3-0.5c0.2,0,17.6-3.2,36.5-19.1
-	c21-17.7,51.8-31.1,66.3-32.2l4.9-0.3l-0.7,4.9c0,0,0,0,0,0c0,0-0.1,1.1,0.6,1.9c0.8,1,2.7,1.5,5.3,1.5c7.4,0,16.5-8.8,19.3-12.2
-	l3-3.6l3,3.6c2.8,3.4,11.9,12.2,19.3,12.2c2.5,0,4.2-0.5,5.1-1.5c0.8-1,0.7-2.4,0.7-2.4l-0.7-4.8l4.9,0.3
-	c14.3,1,45.1,14.6,66.5,32.6c18.9,16,36.4,19.1,36.5,19.1l3.3,0.5l0,3.4v311.3l-0.3,0.7c-0.1,0.4-3.7,9.1-17.1,13.6
-	c-1.5,0.5-4.4,1.4-8.4,2.6l-0.5,0.2c-12.4,3.8-38.3,11.7-61.7,20.1c-37.3,13.4-45.6,19.9-47.3,22.7L300,513.6z M165.8,447.4
-	c0.3,0.8,3.4,7.3,14.4,11c1.5,0.5,4.5,1.4,8.5,2.7l0.3,0.1c43.8,13.4,102.6,32.5,111,44.2c8.5-11.7,67.3-30.8,111-44.2l0.5-0.2
-	c4-1.2,6.8-2.1,8.3-2.6c11-3.6,14.1-10.2,14.4-11V137.3c-2.5-0.5-19.7-4.4-38.3-20c-20.5-17.3-49.7-30.4-63.5-31.6
-	c0.1,1,0,3.4-1.7,5.3c-1.7,2-4.5,3-8.4,3c-10.2,0-20.4-11.2-22.3-13.4c-1.9,2.2-12.1,13.4-22.3,13.4c-3.9,0-6.8-1-8.5-2.9
-	c-1.6-1.8-1.7-4-1.7-4.9c-14,1.2-43.3,14.1-63.4,31.1c-18.5,15.6-35.8,19.5-38.3,20V447.4z"/>
-</svg>`;
-const cardList = [
-  {
-    id: 1,
-    name: "Blue Gold",
-    color: "#fbffb2",
-    columnColor: "#101f3d",
-  },
-  {
-    id: 2,
-    name: "Gold",
-    color: "#000000",
-    columnColor: "#CFB95C",
-  },
-];
 
 const DrawingBoard = ({
   upscaleCanvas,
@@ -55,27 +23,9 @@ const DrawingBoard = ({
   const SCROLL_SENSITIVITY = 0.0005;
   const MAX_ZOOM = 10;
   const MIN_ZOOM = 0.3;
-  const dropdownRef = useRef(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const dispatch = useDispatch();
   const result = useSelector((state: { image: any }) => state.image);
-
-  const handleClickOutside = (event: MouseEvent) => {
-    if (!dropdownRef.current) return;
-    if (
-      dropdownRef.current &&
-      !dropdownRef?.current?.contains(event.target as Node)
-    ) {
-      setOpenCards(false);
-    }
-  };
-
-  useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
   const {
     position,
     totalPoint,
@@ -92,6 +42,22 @@ const DrawingBoard = ({
     color,
     columnColor,
   } = result;
+  const handleClickOutside = (event: MouseEvent) => {
+    if (!dropdownRef.current) return;
+    if (
+      dropdownRef.current &&
+      !dropdownRef.current.contains(event.target as Node)
+    ) {
+      console.log("Clicked outside");
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const imgSrc = result.image;
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -185,15 +151,15 @@ const DrawingBoard = ({
     const canvas = canvasRef.current;
 
     if (canvas) {
-      // Create a data URL from the canvas
+      // Canvastan data url oluşturuyorum.
       const dataURL = canvas?.toDataURL("image/png");
 
-      // Create a download link
+      // İndirme bağlantısı create ediyorum.
       const link = document.createElement("a");
       link.href = dataURL;
       link.download = uuidv4();
 
-      // Trigger a click on the link to start the download
+      // oluşturduğum bağlantıyı tetikleyerek indirme işlemini başlatıyorum.
       link.click();
     }
   };
@@ -214,8 +180,6 @@ const DrawingBoard = ({
         defaultImg.onload = () => {
           ctx.clearRect(0, 0, canvas.width, canvas.height);
           ctx.drawImage(defaultImg, 100, 0, canvas.width - 200, canvas.height);
-
-          blueGold(ctx, canvas.width, canvas.height, color, columnColor);
 
           // Girilen görüntüyü hesaplanan boyutlarla çizer
           if (imgSrc) {
@@ -275,6 +239,8 @@ const DrawingBoard = ({
           }
           // frame(ctx, canvas, svgData);
         };
+        blueGold(ctx, canvas.width, canvas.height, color, columnColor);
+        console.log(defaultImg);
 
         defaultImg.src = "/images/" + defaultImgSrc + ".png";
       }
@@ -384,3 +350,35 @@ const DrawingBoard = ({
 };
 
 export default DrawingBoard;
+const svgData = `<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 28.3.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="katman_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 600 600" style="enable-background:new 0 0 600 600;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#F5E380;}
+</style>
+<path class="st0" d="M300,513.6l-3.4-5.5c-1.7-2.7-10-9.2-47.3-22.7c-23.4-8.4-49.2-16.3-61.7-20.1l-0.3-0.1
+	c-4.1-1.3-7.1-2.2-8.6-2.7c-13.2-4.3-16.7-12.6-17.1-13.6l-0.3-0.7V133.6l3.3-0.5c0.2,0,17.6-3.2,36.5-19.1
+	c21-17.7,51.8-31.1,66.3-32.2l4.9-0.3l-0.7,4.9c0,0,0,0,0,0c0,0-0.1,1.1,0.6,1.9c0.8,1,2.7,1.5,5.3,1.5c7.4,0,16.5-8.8,19.3-12.2
+	l3-3.6l3,3.6c2.8,3.4,11.9,12.2,19.3,12.2c2.5,0,4.2-0.5,5.1-1.5c0.8-1,0.7-2.4,0.7-2.4l-0.7-4.8l4.9,0.3
+	c14.3,1,45.1,14.6,66.5,32.6c18.9,16,36.4,19.1,36.5,19.1l3.3,0.5l0,3.4v311.3l-0.3,0.7c-0.1,0.4-3.7,9.1-17.1,13.6
+	c-1.5,0.5-4.4,1.4-8.4,2.6l-0.5,0.2c-12.4,3.8-38.3,11.7-61.7,20.1c-37.3,13.4-45.6,19.9-47.3,22.7L300,513.6z M165.8,447.4
+	c0.3,0.8,3.4,7.3,14.4,11c1.5,0.5,4.5,1.4,8.5,2.7l0.3,0.1c43.8,13.4,102.6,32.5,111,44.2c8.5-11.7,67.3-30.8,111-44.2l0.5-0.2
+	c4-1.2,6.8-2.1,8.3-2.6c11-3.6,14.1-10.2,14.4-11V137.3c-2.5-0.5-19.7-4.4-38.3-20c-20.5-17.3-49.7-30.4-63.5-31.6
+	c0.1,1,0,3.4-1.7,5.3c-1.7,2-4.5,3-8.4,3c-10.2,0-20.4-11.2-22.3-13.4c-1.9,2.2-12.1,13.4-22.3,13.4c-3.9,0-6.8-1-8.5-2.9
+	c-1.6-1.8-1.7-4-1.7-4.9c-14,1.2-43.3,14.1-63.4,31.1c-18.5,15.6-35.8,19.5-38.3,20V447.4z"/>
+</svg>`;
+const cardList = [
+  {
+    id: 1,
+    name: "Blue Gold",
+    color: "#fbffb2",
+    columnColor: "#101f3d",
+  },
+  {
+    id: 2,
+    name: "Gold",
+    color: "#000000",
+    columnColor: "#CFB95C",
+  },
+];

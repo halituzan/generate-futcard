@@ -2,7 +2,7 @@ import { storage } from "./firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { nanoid } from "nanoid";
 
-export const uploadFile = async (file, folder, originalFile) => {
+export const uploadFile = async (file:any, folder:any, originalFile:any) => {
   const metadata = {
     contentType: originalFile.mimetype,
   };
@@ -21,7 +21,7 @@ export const uploadFile = async (file, folder, originalFile) => {
   }
 };
 
-export const getFile = async (path) => {
+export const getFile = async (path:any) => {
   try {
     const fileRef = ref(storage, path);
     return getDownloadURL(fileRef);
