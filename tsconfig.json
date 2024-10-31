@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "types": ["@types/fabric"],
     "target": "es6",
     "lib": [
       "dom",
@@ -17,11 +18,9 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ],
+    "plugins": [{
+      "name": "next"
+    }],
     "paths": {
       "@/*": [
         "./*"

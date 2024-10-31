@@ -30,9 +30,6 @@ const FullScreenCanvas: React.FC = () => {
         isDrawingMode: false,
         backgroundColor: "transparent",
       });
-      // canvas.current.freeDrawingBrush = new fabric.PencilBrush(canvas.current);
-      // canvas.current.freeDrawingBrush.width = 20;
-      // canvas.current.freeDrawingBrush.color = "black";
 
       canvas.current.on("object:selected", () => {
         canvas.current?.discardActiveObject();
@@ -59,11 +56,11 @@ const FullScreenCanvas: React.FC = () => {
           left: 200,
           top: 50,
           selectable: true,
+          name: "currentImage",
         });
         setRenderedImage(img);
         canvas?.current?.zoomToPoint({ x: 0, y: 50 }, 0.3);
 
-        console.log("canvas.current", canvas.current);
         canvas.current.add(img);
         canvas.current.renderAll();
       },
@@ -114,16 +111,27 @@ const FullScreenCanvas: React.FC = () => {
     return () => {
       canvas.current?.dispose();
     };
-  }, []);
-
-  useEffect(() => {
-    renderCanvas();
-
-    //Canvas temizleme
-    return () => {
-      canvas.current?.dispose();
-    };
   }, [defaultImgSrc]);
+
+  const handleSaveImage = () => {
+    if (canvas && canvas.current) {
+      // Canvastan data url oluşturuyorum.
+
+      const dataURL = canvas.current._activeObject.toDataURL({
+        format: "png",
+        quality: 1,
+      });
+
+      // İndirme bağlantısı create ediyorum.
+      const link = document.createElement("a");
+      link.href = dataURL;
+      link.download = "asdasdasd";
+
+      // oluşturduğum bağlantıyı tetikleyerek indirme işlemini başlatıyorum.
+      link.click();
+    }
+  };
+
   return (
     <div className='relative'>
       <canvas
@@ -133,6 +141,14 @@ const FullScreenCanvas: React.FC = () => {
         height={1000}
         id='canvas'
       />
+      <div className='absolute bottom-0 right-1/2'>
+        <Button
+          className='bg-blue-500 w-full rounded-t-none text-xl font-din'
+          onClick={handleSaveImage}
+          iconLeft='ant-design:save-twotone'
+          text='Save'
+        />
+      </div>
       <div className='button-list flex flex-col absolute top-2 right-2'>
         <Button
           className='bg-blue-500 flex items-center justify-center rounded-md w-8 max-w-[32px] h-8 font-din hover:scale-[1.05]'
