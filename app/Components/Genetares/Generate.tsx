@@ -6,10 +6,13 @@ import { Icon } from "@iconify/react";
 import axios from "axios";
 import Button from "../Patterns/Buttons";
 import Variables from "./Variables";
+import FullScreenCanvas from "./FullScreenCanvas";
+import DrawingBoard2 from "./DrawingBoard2";
 
 const Generate = () => {
   const uploadInput = useRef<HTMLInputElement>(null);
   const [upscaleCanvas, setUpscaleCanvas] = useState(false);
+  const [genareteInputsOpen, setGenareteInputsOpen] = useState(true);
 
   const [selectedImage, setSelectedImage] = useState({
     id: "",
@@ -61,13 +64,31 @@ const Generate = () => {
   return (
     <Main>
       <div className='flex flex-col lg:flex-row items-start flex-1'>
-        <div className='card-area rounded-md w-full lg:w-1/2 bg-slate-light'>
-          <DrawingBoard
-            upscaleCanvas={upscaleCanvas}
-            setUpscaleCanvas={setUpscaleCanvas}
-          />
+        <div
+          className='canvas  w-full h-screen bg-slate-light'
+          // onClick={() => setGenareteInputsOpen(true)}
+        >
+          <FullScreenCanvas />
         </div>
-        <div className='upload-area flex-1 w-full lg:w-1/2 pl-0 lg:pl-4 mt-5 lg:mt-0  flex flex-col'>
+      </div>
+
+      {genareteInputsOpen && (
+        <div
+          className={`upload-area flex-1 flex w-[300px] flex-col items bg-white absolute right-0 top-0 h-screen p-2 pt-4 transition-all ${
+            genareteInputsOpen
+              ? "translate-x-0 w-[300px]"
+              : "translate-x-full w-0"
+          }`}
+        >
+          <div className='w-full flex justify-end items-end'>
+            <Button
+              className='bg-blue-500 rounded-md w-8 max-w-[32px] h-8 font-din hover:scale-[1.05] mb-2'
+              onClick={() => setGenareteInputsOpen(false)}
+              iconSize={20}
+              tooltip='Close Drawer'
+              iconLeft='tabler:circle-dashed-x'
+            />
+          </div>
           <div className='flex w-full justify-between'>
             <Button
               onClick={upload}
@@ -97,15 +118,15 @@ const Generate = () => {
                 fileList.map(
                   (item: { id: string; title: string; image: string }) => {
                     return (
-                      <div key={item.id} className='p-2 w-32 h-32 relative'>
+                      <div key={item.id} className='p-2 w-20 h-20 relative'>
                         <img
                           className={`w-full h-full object-cover hover:scale-[1.05] transition-all hover:shadow-sm rounded-md cursor-pointer
-                      ${
-                        selectedImage.id === item.id
-                          ? "border-2 border-blue-500"
-                          : "border border-transparent"
-                      }
-                      `}
+                    ${
+                      selectedImage.id === item.id
+                        ? "border-2 border-blue-500"
+                        : "border border-transparent"
+                    }
+                    `}
                           onClick={() => {
                             if (selectedImage.id === item.id) {
                               setSelectedImage({
@@ -140,7 +161,8 @@ const Generate = () => {
             {selectedImage.id && <Variables selectedImage={selectedImage} />}
           </div>
         </div>
-      </div>
+      )}
+
       {upscaleCanvas && (
         <div className='w-screen h-screen fixed top-0 left-0 bg-white flex flex-col'>
           <div className='h-10 flex justify-end items-center px-2 border-b border-b-blue-500'>

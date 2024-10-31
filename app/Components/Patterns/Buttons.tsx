@@ -26,7 +26,7 @@ const Button: React.FC<ButtonProps> = ({
   color,
   disabled = false,
   className,
-  mr,
+  mr="0",
   textColor = "text-white",
   iconSize = 24,
   tooltip,

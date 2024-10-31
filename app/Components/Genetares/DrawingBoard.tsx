@@ -279,23 +279,14 @@ const DrawingBoard = ({
   };
 
   return (
-    <div className='relative '>
-      <canvas
-        className='p-10 w-full rounded-t-lg shadow-[inset_0_0_20px_2px_rgba(0,0,0,0.1)]'
-        ref={canvasRef}
-        width={600}
-        height={600}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-        onWheel={handleWheel}
-      />
-      <Button
+    <div className='relative h-screen w-full flex flex-col flex-1 self-stretch'>
+      asd
+      {/* <Button
         className='bg-blue-500 w-full rounded-t-none text-xl font-din'
         onClick={handleSaveImage}
         iconLeft='ant-design:save-twotone'
         text='Save'
-      />
+      /> */}
       <div className='button-list flex flex-col absolute top-2 right-2'>
         <Button
           className='bg-blue-500 flex items-center justify-center rounded-md w-8 max-w-[32px] h-8 font-din hover:scale-[1.05]'
@@ -305,7 +296,6 @@ const DrawingBoard = ({
           iconLeft='vaadin:absolute-position'
         />
       </div>
-
       <div className='button-list flex flex-col absolute top-2 left-2'>
         <div className='relative'>
           <Button
@@ -322,7 +312,6 @@ const DrawingBoard = ({
           )}
         </div>
       </div>
-
       <div className='button-list flex flex-col absolute bottom-12 right-2'>
         <Button
           className='bg-blue-500 flex items-center justify-center rounded-md w-8 max-w-[32px] h-8 font-din mt-4 hover:scale-[1.05]'
@@ -332,7 +321,6 @@ const DrawingBoard = ({
           iconLeft='material-symbols-light:mop'
         />
       </div>
-
       <div className='button-list flex flex-col absolute bottom-12 left-2'>
         <Button
           className='bg-blue-500 flex items-center justify-center rounded-md w-8 max-w-[32px] h-8 font-din mt-4 hover:scale-[1.05]'
@@ -367,13 +355,13 @@ const svgData = `<?xml version="1.0" encoding="utf-8"?>
 </svg>`;
 const cardList = [
   {
-    id: 1,
+    id: "1",
     name: "Blue Gold",
     color: "#fbffb2",
     columnColor: "#101f3d",
   },
   {
-    id: 2,
+    id: "2",
     name: "Gold",
     color: "#000000",
     columnColor: "#CFB95C",

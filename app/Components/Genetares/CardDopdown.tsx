@@ -46,10 +46,10 @@ const CardDopdown = ({ cardList, setOpenCards }: Props) => {
               }}
             >
               <Image
-                quality={0.5}
-                src={`/images/1.png`}
-                width="64"
-                height="128"
+                quality={50}
+                src={`http://localhost:3000/images/${i.id}.png`}
+                width='64'
+                height='128'
                 className='px-1 cursor-pointer hover:scale-[1.05]'
                 alt={i.name}
               />

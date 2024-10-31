@@ -13,10 +13,10 @@ const Main = ({ children }: Props) => {
   }, []);
 
   return (
-    <div className='flex h-screen items-start p-0 bg-slate-light'>
-      <Sidebar />
-      <main className='px-10 py-4 flex-1 h-screen flex'>
-        <div className='bg-white rounded-md p-5 flex-1 overflow-y-auto'>
+    <div className='flex h-screen items-start p-0'>
+      {/* <Sidebar /> */}
+      <main className='flex-1 h-screen flex'>
+        <div className='bg-white rounded-md flex-1 overflow-y-auto'>
           {children ? children : <HomePage />}
         </div>
       </main>
