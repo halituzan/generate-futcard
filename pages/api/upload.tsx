@@ -9,14 +9,14 @@ import fs from "fs";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const form = new fd.IncomingForm();
-  const data = verifyUser(req.cookies.token);
+  const data = verifyUser(req.cookies.token as string);
 
   form.on("file", async (field: any, file: any) => {
-   console.log(file);
-   
-    const buffer = fs.readFileSync(file.filepath);
-    const blob = new Blob([buffer]);
+    console.log("file", file);
 
+    const buffer = fs.readFileSync(file.filepath) as any;
+    const blob = new Blob([buffer]);
+    console.log("blob", blob);
     // Dosyanın MIME türünü kontrolü
     if (!file.mimetype.startsWith("image")) {
       return res
