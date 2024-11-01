@@ -1,8 +1,9 @@
+import { removeBackground } from "@imgly/background-removal-node";
 import { NextApiRequest, NextApiResponse } from "next";
-const { removeBackground } = require("@imgly/background-removal-node");
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { url } = req.body;
+  console.log("url", url);
 
   try {
     const blob = await removeBackground(url);

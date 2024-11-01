@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "forceConsistentCasingInFileNames": true,
     "types": ["@types/fabric"],
     "target": "es6",
     "lib": [

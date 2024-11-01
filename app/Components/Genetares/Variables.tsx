@@ -43,6 +43,7 @@ const Variables = ({ selectedImage }: Props) => {
   const countryListHandler = async () => {
     try {
       const { data } = await Network.getData("api/general/get-countries");
+      console.log("data", data);
 
       setCountryList(data);
       setSelectedCountry(data[0]?.flag);

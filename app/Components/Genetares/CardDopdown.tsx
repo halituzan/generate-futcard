@@ -6,9 +6,10 @@ import { useDispatch } from "react-redux";
 type Props = {
   cardList: any;
   setOpenCards: any;
+  renderCanvas: any;
 };
 
-const CardDopdown = ({ cardList, setOpenCards }: Props) => {
+const CardDopdown = ({ cardList, setOpenCards, renderCanvas }: Props) => {
   const dispatch = useDispatch();
   return (
     <div className='absolute top-8 left-0 p-2 rounded-lg bg-white min-w-52 flex flex-wrap'>
@@ -43,6 +44,9 @@ const CardDopdown = ({ cardList, setOpenCards }: Props) => {
                     data: i.columnColor,
                   })
                 );
+                setTimeout(() => {
+                  renderCanvas();
+                }, 100);
               }}
             >
               <Image

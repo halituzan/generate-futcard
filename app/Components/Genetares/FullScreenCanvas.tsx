@@ -1,14 +1,32 @@
-import React, { useEffect, useRef, useState } from "react";
+import { clearState } from "@/lib/features/image/imageSlice";
 import { fabric } from "fabric";
-import convertImageToBase64 from "@/helpers/convertImageToBase64";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "../Patterns/Buttons";
 import CardDopdown from "./CardDopdown";
-import { clearState } from "@/lib/features/image/imageSlice";
+import { bottomLines, upperLines } from "./Cards/BlueCard/blueGold";
 
 const FullScreenCanvas: React.FC = () => {
   const dispatch = useDispatch();
-  const { defaultImgSrc } = useSelector((state: { image: any }) => state.image);
+  const result = useSelector((state: { image: any }) => state.image);
+  const {
+    defaultImgSrc,
+    color,
+    columnColor,
+    totalPoint,
+    name,
+    position,
+    pac,
+    pas,
+    def,
+    sho,
+    dri,
+    phy,
+    flag,
+    team,
+    image,
+  } = result;
+
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const canvas = useRef<fabric.Canvas | null>(null);
   const [renderedImage, setRenderedImage] = useState<any>("");
@@ -17,6 +35,7 @@ const FullScreenCanvas: React.FC = () => {
   const [offsetY, setOffsetY] = useState(0);
   const [width, setWidth] = useState(200); // Set a default width
   const [height, setHeight] = useState(200); // Set a default height
+  console.log("image", image);
 
   const renderCanvas = async () => {
     if (!canvasRef.current) return;
@@ -43,25 +62,55 @@ const FullScreenCanvas: React.FC = () => {
     }
 
     // Resim yükleme ve Canvas'e ekleme
-    let sourceUrl: string = `/images/${defaultImgSrc}.png`;
-    if (sourceUrl.startsWith("http")) {
-      sourceUrl = (await convertImageToBase64(sourceUrl)) as string;
-    }
+    // let sourceUrl: string = ;
+
+    // sourceUrl = (await convertImageToBase64(sourceUrl)) as string;
 
     fabric.Image.fromURL(
-      sourceUrl,
-      (img) => {
+      `/images/${defaultImgSrc}.png`,
+      async (img) => {
         if (!canvas.current || !img) return;
         img.set({
-          left: 200,
-          top: 50,
+          left: 0,
+          top: 0,
           selectable: true,
           name: "currentImage",
         });
         setRenderedImage(img);
-        canvas?.current?.zoomToPoint({ x: 0, y: 50 }, 0.3);
+        const { width = 0, height = 0 } = img;
 
-        canvas.current.add(img);
+        canvas?.current?.zoomToPoint({ x: 0, y: 50 }, 0.1);
+        if (!canvas.current || !img) return;
+        const upper = await upperLines(
+          width,
+          height,
+          color,
+          columnColor,
+          totalPoint,
+          position,
+          flag,
+          team
+        );
+        const bottom = bottomLines(
+          width,
+          height,
+          color,
+          name,
+          pac,
+          pas,
+          def,
+          sho,
+          dri,
+          phy
+        );
+
+        const group = new fabric.Group([img, upper, bottom], {
+          left: img.left,
+          top: img.top,
+          selectable: true,
+        });
+
+        canvas.current.add(group);
         canvas.current.renderAll();
       },
       { crossOrigin: "anonymous" }
@@ -89,6 +138,13 @@ const FullScreenCanvas: React.FC = () => {
       canvas.current.relativePan({ x: 0, y: 0 });
     });
   };
+  useEffect(() => {
+    renderCanvas();
+    //Canvas temizleme
+    return () => {
+      canvas.current?.dispose();
+    };
+  }, []);
 
   const handleCoords = () => {
     //* Resmi canvas üzerinde doğru konuma yerleştirir
@@ -103,16 +159,6 @@ const FullScreenCanvas: React.FC = () => {
     //* Canvası Temizler
     dispatch(clearState());
   };
-
-  useEffect(() => {
-    renderCanvas();
-
-    //Canvas temizleme
-    return () => {
-      canvas.current?.dispose();
-    };
-  }, [defaultImgSrc]);
-
   const handleSaveImage = () => {
     if (canvas && canvas.current) {
       // Canvastan data url oluşturuyorum.
@@ -170,7 +216,14 @@ const FullScreenCanvas: React.FC = () => {
             iconLeft='formkit:select'
           />
           {openCards && (
-            <CardDopdown setOpenCards={setOpenCards} cardList={cardList} />
+            <CardDopdown
+              setOpenCards={setOpenCards}
+              cardList={cardList}
+              renderCanvas={() => {
+                canvas.current?.clear();
+                renderCanvas();
+              }}
+            />
           )}
         </div>
       </div>

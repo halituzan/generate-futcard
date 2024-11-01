@@ -1,3 +1,5 @@
+import { fabric } from "fabric";
+
 const writeText = (ctx: any, info: any, style: any = {}, value?: any) => {
   if (!ctx) return;
   const { text, x, y } = info;
@@ -160,4 +162,24 @@ export const valuesGenerate = (
     },
     position === "GK" ? "POS" : "PHY"
   );
+};
+export const valuesGenerates = (
+  canvasWidth: number,
+  text?: any,
+  size?: any,
+  color?: any,
+  xTotalPoint?: any,
+  yTotalPoint?: any
+) => {
+  //* Total Point
+  var totalPoints = new fabric.Text(text, {
+    left: yTotalPoint ?? 0,
+    top: xTotalPoint ?? 0,
+    fontSize: canvasWidth * (size ?? 0.1),
+    fontFamily: "DIN-Condensed-Bold",
+    textAlign: "center",
+    fill: color,
+  });
+
+  return totalPoints;
 };
