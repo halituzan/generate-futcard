@@ -90,7 +90,7 @@ const Variables = ({ selectedImage }: Props) => {
       dispatch(uploadTeam(selectTeamBase64));
       setLoading(false);
     } catch (error) {
-      console.log(error);
+      console.log("error", error);
       setLoading(false);
     }
   };
