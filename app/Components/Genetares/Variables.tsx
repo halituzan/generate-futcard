@@ -1,4 +1,5 @@
 import { positions } from "@/app/default";
+import removeBackgroundFromImageUrl from "@imgly/background-removal";
 import Network from "@/helpers/Network";
 import fileToBase64 from "@/helpers/fileToBase64";
 import {
@@ -69,6 +70,41 @@ const Variables = ({ selectedImage }: Props) => {
     }
   };
 
+  const blobToBase64 = (blob: Blob): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64data = reader.result as string;
+        resolve(base64data);
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  };
+
+  /** CORS a takılıyor amk   */
+  const removeBackgroundFromImage = async (
+    url: string
+  ): Promise<string | null> => {
+    try {
+      const result: Blob = await removeBackgroundFromImageUrl(url, {
+        model: "medium",
+        output: {
+          format: "image/png",
+        },
+      });
+
+      // Blob'u base64 formatına dönüştür
+      const dataURL = await blobToBase64(result);
+      // `data:image/png;base64,` kısmını temizleyerek sadece base64 verisini döndür
+      const base64Data = dataURL.replace(/^data:image\/\w+;base64,/, "");
+      return base64Data;
+    } catch (error) {
+      console.error("Error removing background:", error);
+      return null;
+    }
+  };
+
   const removeBg = async () => {
     setLoading(true);
     try {
@@ -82,9 +118,14 @@ const Variables = ({ selectedImage }: Props) => {
       dispatch(uploadValues({ key: "def", data: def }));
       dispatch(uploadValues({ key: "phy", data: phy }));
 
-      const { data } = await Network.postData("/api/remove", {
-        url: selectedImage.image,
-      });
+      // const { data } = await Network.postData("/api/remove", {
+      //   url: selectedImage.image,
+      // });
+      const data = (await removeBackgroundFromImage(
+        selectedImage.image
+      )) as any;
+      console.log("data", data);
+
       dispatch(uploadImage(data));
       dispatch(uploadFlag(selectedCountry));
       dispatch(uploadTeam(selectTeamBase64));
