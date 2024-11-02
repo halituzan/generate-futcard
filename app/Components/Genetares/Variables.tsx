@@ -1,5 +1,5 @@
+import imglyRemoveBackground, { Config } from "@imgly/background-removal";
 import { positions } from "@/app/default";
-import removeBackgroundFromImageUrl from "@imgly/background-removal";
 import Network from "@/helpers/Network";
 import fileToBase64 from "@/helpers/fileToBase64";
 import {
@@ -82,28 +82,14 @@ const Variables = ({ selectedImage }: Props) => {
     });
   };
 
-  /** CORS a takılıyor amk   */
-  const removeBackgroundFromImage = async (
-    url: string
-  ): Promise<string | null> => {
-    try {
-      const result: Blob = await removeBackgroundFromImageUrl(url, {
-        model: "medium",
-        output: {
-          format: "image/png",
-        },
-      });
-
-      // Blob'u base64 formatına dönüştür
-      const dataURL = await blobToBase64(result);
-      // `data:image/png;base64,` kısmını temizleyerek sadece base64 verisini döndür
-      const base64Data = dataURL.replace(/^data:image\/\w+;base64,/, "");
-      return base64Data;
-    } catch (error) {
-      console.error("Error removing background:", error);
-      return null;
+  const configBg: Config = {
+    model: "isnet",
+    output: {
+      format: "image/png",
     }
   };
+  /** CORS a takılıyor amk   */
+
 
   const removeBg = async () => {
     setLoading(true);
@@ -118,13 +104,9 @@ const Variables = ({ selectedImage }: Props) => {
       dispatch(uploadValues({ key: "def", data: def }));
       dispatch(uploadValues({ key: "phy", data: phy }));
 
-      // const { data } = await Network.postData("/api/remove", {
-      //   url: selectedImage.image,
-      // });
-      const data = (await removeBackgroundFromImage(
-        selectedImage.image
-      )) as any;
-      console.log("data", data);
+      const { data } = await Network.postData("http://localhost:4000/remove", {
+        url: selectedImage.image,
+      });
 
       dispatch(uploadImage(data));
       dispatch(uploadFlag(selectedCountry));

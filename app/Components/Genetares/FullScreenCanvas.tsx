@@ -35,7 +35,6 @@ const FullScreenCanvas: React.FC = () => {
   const [offsetY, setOffsetY] = useState(0);
   const [width, setWidth] = useState(200); // Set a default width
   const [height, setHeight] = useState(200); // Set a default height
-  console.log("image", image);
 
   const renderCanvas = async () => {
     if (!canvasRef.current) return;
@@ -76,6 +75,22 @@ const FullScreenCanvas: React.FC = () => {
           selectable: true,
           name: "currentImage",
         });
+        const personImage = await new Promise<fabric.Image>((resolve) => {
+          fabric.Image.fromURL(image, (img) => {
+            // Ortalamak için konum ayarları
+            img.set({
+              left: 2,
+              top: 2,
+              // height: canvasHeight / 20,
+              selectable: false,
+            });
+            resolve(img);
+          });
+        });
+        console.log("personImage", personImage);
+        if (!personImage) {
+          return;
+        }
         setRenderedImage(img);
         const { width = 0, height = 0 } = img;
 
@@ -104,7 +119,7 @@ const FullScreenCanvas: React.FC = () => {
           phy
         );
 
-        const group = new fabric.Group([img, upper, bottom], {
+        const group = new fabric.Group([img, personImage, upper, bottom], {
           left: img.left,
           top: img.top,
           selectable: true,
@@ -139,12 +154,14 @@ const FullScreenCanvas: React.FC = () => {
     });
   };
   useEffect(() => {
-    renderCanvas();
-    //Canvas temizleme
-    return () => {
-      canvas.current?.dispose();
-    };
-  }, []);
+    if (image) {
+      renderCanvas();
+      //Canvas temizleme
+      return () => {
+        canvas.current?.dispose();
+      };
+    }
+  }, [image]);
 
   const handleCoords = () => {
     //* Resmi canvas üzerinde doğru konuma yerleştirir
