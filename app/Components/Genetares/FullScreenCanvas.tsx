@@ -81,8 +81,8 @@ const FullScreenCanvas: React.FC = () => {
             img.set({
               left: 2,
               top: 2,
-              // height: canvasHeight / 20,
-              selectable: false,
+              name: "personImage",
+              selectable: true,
             });
             resolve(img);
           });
