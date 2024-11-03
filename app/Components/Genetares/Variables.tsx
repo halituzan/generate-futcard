@@ -1,4 +1,3 @@
-import imglyRemoveBackground, { Config } from "@imgly/background-removal";
 import { positions } from "@/app/default";
 import Network from "@/helpers/Network";
 import fileToBase64 from "@/helpers/fileToBase64";
@@ -81,15 +80,6 @@ const Variables = ({ selectedImage }: Props) => {
       reader.readAsDataURL(blob);
     });
   };
-
-  const configBg: Config = {
-    model: "isnet",
-    output: {
-      format: "image/png",
-    }
-  };
-  /** CORS a takılıyor amk   */
-
 
   const removeBg = async () => {
     setLoading(true);
