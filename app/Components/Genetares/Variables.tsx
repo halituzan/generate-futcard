@@ -24,21 +24,40 @@ interface Country {
 const Variables = ({ selectedImage }: Props) => {
   const uploadInput = useRef<HTMLInputElement>(null);
   const dispatch = useDispatch();
-  const result = useSelector((state: { image: any }) => state.image);
+  const { defaultImgSrc, color, columnColor,team } = useSelector(
+    (state: { image: any }) => state.image
+  );
+
   const [loading, setLoading] = useState(false);
   const [countryList, setCountryList] = useState<Country[]>([]);
   const [selectedCountry, setSelectedCountry] = useState<Country>();
-  const [selectTeam, setSelectTeam] = useState(null);
+  const [selectTeam, setSelectTeam] = useState(team);
   const [selectTeamBase64, setSelectTeamBase64] = useState("");
-  const [name, setName] = useState("");
-  const [totalPoint, setTotalPoint] = useState("");
+  const [name, setName] = useState("Uzan");
+  const [totalPoint, setTotalPoint] = useState("99");
   const [position, setPosition] = useState("CAM");
-  const [pac, setPac] = useState("");
-  const [sho, setSho] = useState("");
-  const [pas, setPas] = useState("");
-  const [dri, setDri] = useState("");
-  const [def, setDef] = useState("");
-  const [phy, setPhy] = useState("");
+  const [pac, setPac] = useState("99");
+  const [sho, setSho] = useState("99");
+  const [pas, setPas] = useState("99");
+  const [dri, setDri] = useState("99");
+  const [def, setDef] = useState("99");
+  const [phy, setPhy] = useState("99");
+
+  const isOk =
+    defaultImgSrc &&
+    color &&
+    columnColor &&
+    totalPoint &&
+    name &&
+    position &&
+    pac &&
+    pas &&
+    def &&
+    sho &&
+    dri &&
+    phy &&
+    selectedCountry &&
+    selectTeam;
 
   const countryListHandler = async () => {
     try {
@@ -69,19 +88,8 @@ const Variables = ({ selectedImage }: Props) => {
     }
   };
 
-  const blobToBase64 = (blob: Blob): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const base64data = reader.result as string;
-        resolve(base64data);
-      };
-      reader.onerror = reject;
-      reader.readAsDataURL(blob);
-    });
-  };
-
   const removeBg = async () => {
+    if (!isOk) return;
     setLoading(true);
     try {
       dispatch(uploadValues({ key: "name", data: name }));
@@ -96,6 +104,8 @@ const Variables = ({ selectedImage }: Props) => {
 
       const { data } = await Network.postData("http://localhost:4000/remove", {
         url: selectedImage.image,
+        width: 1000,
+        height: 1000,
       });
 
       dispatch(uploadImage(data));
@@ -279,6 +289,7 @@ const Variables = ({ selectedImage }: Props) => {
       </div>
       {selectedImage.id && (
         <Button
+          disabled={!isOk}
           text='Add Canvas'
           iconLeft='carbon:spray-paint'
           color='bg-blue-500'
@@ -286,7 +297,7 @@ const Variables = ({ selectedImage }: Props) => {
           onClick={removeBg}
         />
       )}
-      {loading && (
+      {/* {loading && (
         <div className='z-50 top-0 left-0 fixed w-screen h-screen flex items-center justify-center bg-blue-500/20'>
           <Icon
             icon='eos-icons:bubble-loading'
@@ -294,7 +305,7 @@ const Variables = ({ selectedImage }: Props) => {
             className='text-blue-500'
           />
         </div>
-      )}
+      )} */}
     </div>
   );
 };

@@ -30,17 +30,17 @@ export const upperLines = async (
   columnColor?: string,
   total?: string,
   pos?: string,
-  flag?: string,
+  flag?: any,
   team?: string
 ) => {
   //! Değerlerin Arka Planı
-  const grdReactValues = {
+  const grdRectValues = {
     width: canvasWidth / 7,
     height: canvasHeight / 3,
     top: canvasHeight * 0.192,
     left: canvasWidth * 0.19,
   };
-  const grdRect = new fabric.Rect(grdReactValues);
+  const grdRect = new fabric.Rect(grdRectValues);
   grdRect.set(
     "fill",
     new fabric.Gradient({
@@ -63,9 +63,9 @@ export const upperLines = async (
   const topHorizantalLineValues = {
     top: canvasHeight * 0.3,
     left:
-      grdReactValues.left +
-      (grdReactValues.width - grdReactValues.width * 0.8) / 2,
-    width: grdReactValues.width * 0.8,
+      grdRectValues.left +
+      (grdRectValues.width - grdRectValues.width * 0.8) / 2,
+    width: grdRectValues.width * 0.8,
     height: canvasHeight * 0.005,
     fill: color,
   };
@@ -80,7 +80,7 @@ export const upperLines = async (
   const totalPoints = new fabric.Textbox(total ?? "99", {
     left: clipRectTotalPoints.left, // Kutunun yatay konumuyla hizalanır
     top: clipRectTotalPoints.top, // Kutunun dikey konumuyla hizalanır
-    width: grdReactValues.width, // Metin genişliği kutu genişliğiyle sınırlıdır
+    width: grdRectValues.width, // Metin genişliği kutu genişliğiyle sınırlıdır
     fontSize: canvasWidth * 0.125,
     fontFamily: "DIN-Condensed-Bold",
     textAlign: "center", // Yatayda ortalanır
@@ -91,7 +91,7 @@ export const upperLines = async (
   const totalPointsGroup = new fabric.Group(
     [clipRectTotalPoints, totalPoints],
     {
-      left: grdReactValues.left,
+      left: grdRectValues.left,
       top: canvasHeight * 0.15,
       selectable: false,
     }
@@ -103,7 +103,7 @@ export const upperLines = async (
   const position = new fabric.Textbox(pos ?? "", {
     left: clipRectPosition.left, // Kutunun yatay konumuyla hizalanır
     top: clipRectPosition.top, // Kutunun dikey konumuyla hizalanır
-    width: grdReactValues.width, // Metin genişliği kutu genişliğiyle sınırlıdır
+    width: grdRectValues.width, // Metin genişliği kutu genişliğiyle sınırlıdır
     fontSize: canvasWidth * 0.08,
     fontFamily: "DIN-Condensed-Bold",
     textAlign: "center", // Yatayda ortalanır
@@ -112,7 +112,7 @@ export const upperLines = async (
     originX: "center", // Yatay ortalama
   });
   const positionGroup = new fabric.Group([clipRectPosition, position], {
-    left: grdReactValues.left,
+    left: grdRectValues.left,
     top: canvasHeight * 0.23,
     selectable: false,
   });
@@ -125,13 +125,14 @@ export const upperLines = async (
     totalPointsGroup,
     positionGroup,
   ];
+
   if (flag) {
     const flagImage = await new Promise<fabric.Image>((resolve) => {
-      fabric.Image.fromURL(flag, (img) => {
+      fabric.Image.fromURL(flag.flag, (img) => {
         // Ölçeklendirme oranını belirleme
         const scale = Math.max(
-          grdReactValues.width / img.width!,
-          grdReactValues.height / img.height!
+          grdRectValues.width / img.width!,
+          grdRectValues.height / img.height!
         );
 
         img.scale(scale * 0.15);
@@ -139,8 +140,8 @@ export const upperLines = async (
         // Ortalamak için konum ayarları
         img.set({
           left:
-            grdReactValues.left +
-            (grdReactValues.width - grdReactValues.width * 0.8) / 2,
+            grdRectValues.left +
+            (grdRectValues.width - grdRectValues.width * 0.8) / 2,
           top: canvasHeight * 0.333,
           // height: canvasHeight / 20,
           selectable: false,
@@ -152,26 +153,31 @@ export const upperLines = async (
   }
 
   if (team) {
+    const clipRectTeamImage = new fabric.Rect({ fill: "red" });
+
     const teamImage = await new Promise<fabric.Image>((resolve) => {
       fabric.Image.fromURL(team, (img) => {
-        const scale = Math.max(
-          grdReactValues.width / img.width!,
-          grdReactValues.height / img.height!
-        );
-        img.scale(scale * 0.15);
         img.set({
-          left:
-            grdReactValues.left +
-            (grdReactValues.width - grdReactValues.width * 0.8) / 2,
-          top: canvasHeight * 0.42,
-          // width: grdReactValues.width * 0.8,
-          // height: canvasHeight / 13.335,
-          selectable: false,
-        });
+          left: clipRectTeamImage.left, // Kutunun yatay konumuyla hizalanır
+          top: clipRectTeamImage.top, // Kutunun dikey konumuyla hizalanır
+          width: grdRectValues.width, // Metin genişliği kutu genişliğiyle sınırlıdır
+        })
         resolve(img);
       });
     });
-    groupList.push(teamImage as any);
+    const teamImageGroup = new fabric.Group(
+      [clipRectTeamImage, teamImage],
+      {
+        left:
+          grdRectValues.left +
+          (grdRectValues.width - grdRectValues.width * 0.8) / 2,
+        top: canvasHeight * 0.42,
+        // width: grdRectValues.width * 0.8,
+        // height: canvasHeight / 13.335,
+        selectable: false,
+      }
+    );
+    groupList.push(teamImageGroup as any);
   }
 
   // Grubu oluştur ve döndür

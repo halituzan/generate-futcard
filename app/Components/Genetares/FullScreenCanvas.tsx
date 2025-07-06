@@ -26,10 +26,24 @@ const FullScreenCanvas: React.FC = () => {
     team,
     image,
   } = result;
-
+  const isOk =
+    defaultImgSrc &&
+    color &&
+    columnColor &&
+    totalPoint &&
+    name &&
+    position &&
+    pac &&
+    pas &&
+    def &&
+    sho &&
+    dri &&
+    phy &&
+    flag &&
+    team &&
+    image;
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const canvas = useRef<fabric.Canvas | null>(null);
-  const [renderedImage, setRenderedImage] = useState<any>("");
   const [openCards, setOpenCards] = useState(false);
   const [offsetX, setOffsetX] = useState(0);
   const [offsetY, setOffsetY] = useState(0);
@@ -69,30 +83,43 @@ const FullScreenCanvas: React.FC = () => {
       `/images/${defaultImgSrc}.png`,
       async (img) => {
         if (!canvas.current || !img) return;
+        const { width = 0, height = 0 } = img;
         img.set({
           left: 0,
           top: 0,
-          selectable: true,
+          selectable: false,
           name: "currentImage",
         });
         const personImage = await new Promise<fabric.Image>((resolve) => {
           fabric.Image.fromURL(image, (img) => {
             // Ortalamak için konum ayarları
+            const imageWidth = img.width as number;
+            const imageHeight = img.height as number;
+            const ratioCalculate1 = width / height;
+            const ratioCalculate = imageWidth / imageHeight;
+            console.log("ratioCalculate", ratioCalculate);
+            console.log("ratioCalculate1", ratioCalculate1);
+            img.scale(ratioCalculate * 1);
             img.set({
-              left: 2,
-              top: 2,
+              top: height * 0.526 - imageHeight,
+              left: width * 0.6 - imageWidth / 2,
               name: "personImage",
               selectable: true,
+              evented: true, // Nesneye tıklanabilirlik ekler
+              lockUniScaling: true, // Oranı koruyarak yeniden boyutlandırma
+              hasControls: true, // Kontrolleri etkinleştirir
+              hasBorders: true, // Sınır çizgilerini gösterir
+              lockMovementX: false, // Yatay hareketi engellemez
+              lockMovementY: false, // Dikey hareketi engellemez
             });
+
             resolve(img);
           });
         });
-        console.log("personImage", personImage);
+
         if (!personImage) {
           return;
         }
-        setRenderedImage(img);
-        const { width = 0, height = 0 } = img;
 
         canvas?.current?.zoomToPoint({ x: 0, y: 50 }, 0.1);
         if (!canvas.current || !img) return;
@@ -122,16 +149,25 @@ const FullScreenCanvas: React.FC = () => {
         const group = new fabric.Group([img, personImage, upper, bottom], {
           left: img.left,
           top: img.top,
-          selectable: true,
+          selectable: false,
         });
 
+        // `personImage`'i seçilebilir hale getirmek için
+
         canvas.current.add(group);
-        canvas.current.renderAll();
+        canvas.current.setActiveObject(personImage);
+        canvas.current?.renderAll();
+        // personImage’i sürüklemeyi ve yeniden boyutlandırmayı sürekli etkinleştirmek için dinleyici ekleme
+        personImage.on("object:scaling", () => {
+          canvas.current?.setActiveObject(personImage);
+        });
       },
       { crossOrigin: "anonymous" }
     );
 
     canvas.current.on("mouse:wheel", (event: any) => {
+      console.log(event);
+
       if (!canvas.current) return;
       const delta = event.e.deltaY;
       let zoom = canvas.current.getZoom();
@@ -147,6 +183,9 @@ const FullScreenCanvas: React.FC = () => {
       event.e.preventDefault();
       event.e.stopPropagation();
     });
+    canvas.current.on("mouseover", (event: any) => {
+      console.log(event);
+    });
 
     canvas.current.on("mouse:move", (event: any) => {
       if (!canvas.current) return;
@@ -154,14 +193,14 @@ const FullScreenCanvas: React.FC = () => {
     });
   };
   useEffect(() => {
-    if (image) {
+    if (isOk) {
       renderCanvas();
       //Canvas temizleme
       return () => {
         canvas.current?.dispose();
       };
     }
-  }, [image]);
+  }, [result]);
 
   const handleCoords = () => {
     //* Resmi canvas üzerinde doğru konuma yerleştirir
@@ -180,7 +219,7 @@ const FullScreenCanvas: React.FC = () => {
     if (canvas && canvas.current) {
       // Canvastan data url oluşturuyorum.
 
-      const dataURL = canvas.current._activeObject.toDataURL({
+      const dataURL = canvas.current._activeObject?.toDataURL({
         format: "png",
         quality: 1,
       });
